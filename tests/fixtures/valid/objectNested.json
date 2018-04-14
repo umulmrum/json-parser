@@ -1,0 +1,14 @@
+{
+    "foo": "bar",
+    "baz":{
+        "quux": "foo"
+    },
+    "quux":    {
+        "foo" : {
+            "bar":
+                                        {
+                "baz": true
+            }
+        }
+    }
+}

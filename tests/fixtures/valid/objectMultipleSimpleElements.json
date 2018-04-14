@@ -1,0 +1,13 @@
+{
+    "foo": "bar",
+    "baz": "quux\"",
+    "many": "value\\",
+    "such": "json\\\"",
+    "e": 2e3,
+    "e+": 3e+5,
+    "e-": 2e-3,
+    "E": 2E4,
+    "E+": 3.33E+5,
+    "E-": 5E-2,
+    "u": "test\u002f\u002Ffoo"
+}
