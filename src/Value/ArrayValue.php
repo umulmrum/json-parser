@@ -20,4 +20,9 @@ class ArrayValue implements ValueInterface
     {
         return $this->value->getValue();
     }
+
+    public function resolve()
+    {
+        // TODO: Implement resolve() method.
+    }
 }

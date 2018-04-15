@@ -6,11 +6,12 @@ namespace umulmrum\JsonParser\State;
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
+use umulmrum\JsonParser\Value\ArrayValue;
+use umulmrum\JsonParser\Value\EmptyValue;
 use umulmrum\JsonParser\Value\ObjectValue;
-use umulmrum\JsonParser\Value\ObjectValueList;
 use umulmrum\JsonParser\Value\ValueInterface;
 
-class ObjectState implements StateInterface
+class RootObjectState implements StateInterface
 {
     use WhitespaceTrait;
 
@@ -19,11 +20,9 @@ class ObjectState implements StateInterface
      */
     public function run(DataSourceInterface $dataSource): ?ValueInterface
     {
-        $values = new ObjectValueList();
         $keyFound = false;
         $valueFound = false;
-        $nextElementRequested = false;
-        $currentValue = new ObjectValue();
+        $value = new ObjectValue();
 
         while (null !== $char = $dataSource->read()) {
             if (true === $this->isWhitespace($char)) {
@@ -31,22 +30,21 @@ class ObjectState implements StateInterface
             }
             switch ($char) {
                 case '}':
+                    if (false === $keyFound && false === $valueFound) {
+                        return EmptyValue::getInstance();
+                    }
                     if (true === $keyFound && false === $valueFound) {
                         InvalidJsonException::trigger('No value found for key', $dataSource);
                     }
-                    if (true === $nextElementRequested) {
-                        InvalidJsonException::trigger('Unexpected character "}", expected next element', $dataSource);
-                    }
 
-                    return $values;
+                    return $value;
                 case '"':
                     if (true === $keyFound) {
                         InvalidJsonException::trigger('Invalid character \'"\', ":" expected', $dataSource);
                     }
-                    $currentValue->setKey(States::$STRING->run($dataSource)->getValue());
+                    $value->setKey(States::$STRING->run($dataSource)->getValue());
                     $keyFound = true;
                     $valueFound = false;
-                    $nextElementRequested = false;
                     break;
                 case ':':
                     if (false === $keyFound) {
@@ -56,20 +54,11 @@ class ObjectState implements StateInterface
                         InvalidJsonException::trigger('Unexpected object value. Key or end of object expected',
                             $dataSource);
                     }
-                    $currentValue->setValue(States::$VALUE->run($dataSource));
-                    $values->addValue($currentValue);
-                    $keyFound = false;
-                    $valueFound = true;
-                    $nextElementRequested = false;
-                    break;
+                    $value->setValue(States::$VALUE->run($dataSource));
+
+                    return $value;
                 case ',':
-                    if (true === $keyFound) {
-                        InvalidJsonException::trigger('Invalid character ",", expected value', $dataSource);
-                    }
-                    $currentValue = new ObjectValue();
-                    $values->addValue($currentValue);
-                    $nextElementRequested = true;
-                    break;
+                    InvalidJsonException::trigger('Invalid character ","', $dataSource);
                 default:
                     InvalidJsonException::trigger(
                         sprintf('Invalid character "%s", expected one of ["{", "["]', $char),

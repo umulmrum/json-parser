@@ -69,6 +69,7 @@ class StringDataSourceTest extends TestCase
         while (null !== $char = $this->dataSource->read()) {
             $this->actualResult .= $char;
         }
+        $this->dataSource->finish();
     }
 
     private function thenTheResultingStringShouldEqual(string $data): void

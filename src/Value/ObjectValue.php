@@ -7,7 +7,7 @@ namespace umulmrum\JsonParser\Value;
 class ObjectValue implements ValueInterface
 {
     /**
-     * @var string
+     * @var string|int
      */
     private $key;
     /**
@@ -15,28 +15,34 @@ class ObjectValue implements ValueInterface
      */
     private $value;
 
+    public function __construct($key = null, ValueInterface $value = null)
+    {
+        $this->key = $key;
+        $this->value = $value;
+    }
+
     /**
-     * @return string
+     * @return string|int
      */
-    public function getKey(): string
+    public function getKey()
     {
         return $this->key;
     }
 
     /**
-     * @param string $key
+     * @param string|int $key
      */
-    public function setKey(string $key): void
+    public function setKey($key): void
     {
         $this->key = $key;
     }
 
-    /**
-     * @return ValueInterface
-     */
-    public function getValue(): ValueInterface
+    public function getValue()
     {
-        return $this->value;
+//        return [
+//            $this->key => $this->value->getValue(),
+//        ];
+        return $this->value->getValue();
     }
 
     /**

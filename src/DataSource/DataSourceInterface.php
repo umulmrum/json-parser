@@ -12,7 +12,7 @@ interface DataSourceInterface
 
     public function getCurrentCol(): int;
 
-    public function wasEmpty(): bool;
-
     public function rewind(): void;
+
+    public function finish(): void;
 }

@@ -17,6 +17,14 @@ class States
     /**
      * @var StateInterface
      */
+    public static $ROOT_ARRAY;
+    /**
+     * @var StateInterface
+     */
+    public static $ROOT_OBJECT;
+    /**
+     * @var StateInterface
+     */
     public static $OBJECT;
     /**
      * @var StateInterface
@@ -51,6 +59,8 @@ class States
     {
         self::$DOCUMENT_START = new DocumentStartState();
         self::$DOCUMENT_END = new DocumentEndState();
+        self::$ROOT_OBJECT = new RootObjectState();
+        self::$ROOT_ARRAY = new RootArrayState();
         self::$OBJECT = new ObjectState();
         self::$ARRAY = new ArrayState();
         self::$VALUE = new ValueState();

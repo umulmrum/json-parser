@@ -4,7 +4,7 @@
 namespace umulmrum\JsonParser\DataSource;
 
 
-class StringDataSource implements DataSourceInterface
+class StringDataSource extends AbstractDataSource
 {
     /**
      * @var string
@@ -18,22 +18,11 @@ class StringDataSource implements DataSourceInterface
      * @var int
      */
     private $position = 0;
-    /**
-     * @var int
-     */
-    private $line = 1;
-    /**
-     * @var int
-     */
-    private $col = 1;
+
     /**
      * @var bool
      */
     private $lastCharWasLineFeed = false;
-    /**
-     * @var bool
-     */
-    private $wasEmpty = true;
 
     public function __construct(string $data)
     {
@@ -58,30 +47,18 @@ class StringDataSource implements DataSourceInterface
 
         if ("\n" === $char) {
             $this->lastCharWasLineFeed = true;
-        } else {
-            $this->wasEmpty = false;
         }
 
         return $char;
     }
 
-    public function getCurrentLine(): int
-    {
-        return $this->line;
-    }
-
-    public function getCurrentCol(): int
-    {
-        return $this->col;
-    }
-
-    public function wasEmpty(): bool
-    {
-        return $this->wasEmpty;
-    }
-
     public function rewind(): void
     {
         $this->position--;
+    }
+
+    public function finish(): void
+    {
+        $this->data = null;
     }
 }

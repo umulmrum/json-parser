@@ -9,6 +9,7 @@ use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\DataSource\StringDataSource;
 use umulmrum\JsonParser\InvalidJsonException;
 use umulmrum\JsonParser\JsonParser;
+use umulmrum\JsonParser\Value\ObjectValue;
 
 class JsonParserTest extends TestCase
 {
@@ -147,11 +148,11 @@ class JsonParserTest extends TestCase
         $this->actualResult = $this->jsonParser->generate();
     }
 
-    private function thenTheFirstElementShouldBeReturned()
+    private function thenTheFirstElementShouldBeReturned(): void
     {
         $this->assertEquals([
             'foo',
             'bar',
-        ], $this->actualResult->current());
+        ], $this->actualResult->current()->getValue());
     }
 }
