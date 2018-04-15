@@ -3,6 +3,9 @@ JSON Parser
 
 JSON Parser is a streaming JSON parsing library.
 
+[![Latest Unstable Version](https://poser.pugx.org/umulmrum/json-parser/v/unstable)](https://packagist.org/packages/umulmrum/json-parser)
+[![License](https://poser.pugx.org/umulmrum/json-parser/license)](https://packagist.org/packages/umulmrum/json-parser)
+
 Requirements
 ------------
 
