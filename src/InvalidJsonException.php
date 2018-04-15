@@ -43,6 +43,8 @@ class InvalidJsonException extends \Exception
     }
 
     /**
+     * Convenience method to throw an InvalidJsonException
+     *
      * @param string $message
      * @param DataSourceInterface $dataSource
      * @throws InvalidJsonException

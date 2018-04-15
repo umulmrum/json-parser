@@ -18,6 +18,9 @@ class StringDataSourceTest extends TestCase
      */
     private $actualResult;
 
+    /**
+     * {@inheritDoc}
+     */
     protected function tearDown()
     {
         parent::tearDown();

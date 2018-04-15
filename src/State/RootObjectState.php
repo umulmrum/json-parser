@@ -6,7 +6,6 @@ namespace umulmrum\JsonParser\State;
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
-use umulmrum\JsonParser\Value\ArrayValue;
 use umulmrum\JsonParser\Value\EmptyValue;
 use umulmrum\JsonParser\Value\ObjectValue;
 use umulmrum\JsonParser\Value\ValueInterface;

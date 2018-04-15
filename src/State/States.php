@@ -3,7 +3,10 @@
 
 namespace umulmrum\JsonParser\State;
 
-
+/**
+ * Holds instances of all defined JSON states, so that only a single instance of each state is required, avoiding
+ * instantiating objects.
+ */
 class States
 {
     /**

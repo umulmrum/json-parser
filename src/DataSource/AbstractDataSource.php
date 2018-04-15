@@ -15,11 +15,17 @@ abstract class AbstractDataSource implements DataSourceInterface
      */
     protected $col = 1;
 
+    /**
+     * {@inheritDoc}
+     */
     public function getCurrentLine(): int
     {
         return $this->line;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getCurrentCol(): int
     {
         return $this->col;

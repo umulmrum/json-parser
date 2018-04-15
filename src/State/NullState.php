@@ -9,11 +9,17 @@ use umulmrum\JsonParser\Value\ValueInterface;
 
 class NullState extends AbstractKeywordState
 {
+    /**
+     * {@inheritDoc}
+     */
     protected function getWord(): string
     {
         return 'null';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getValue(): ValueInterface
     {
         return NullValue::getInstance();

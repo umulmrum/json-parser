@@ -9,11 +9,17 @@ use umulmrum\JsonParser\Value\ValueInterface;
 
 class FalseState extends AbstractKeywordState
 {
+    /**
+     * {@inheritDoc}
+     */
     protected function getWord(): string
     {
         return 'false';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getValue(): ValueInterface
     {
         return FalseValue::getInstance();

@@ -18,6 +18,9 @@ class FileDataSourceTest extends TestCase
      */
     private $actualResult;
 
+    /**
+     * {@inheritDoc}
+     */
     protected function tearDown()
     {
         parent::tearDown();
@@ -69,6 +72,6 @@ class FileDataSourceTest extends TestCase
 
     private function thenTheResultingStringShouldEqualContentsFrom(string $fileName): void
     {
-        $this->assertEquals(\file_get_contents($this->getFilePath($fileName)), $this->actualResult);
+        $this->assertStringEqualsFile($this->getFilePath($fileName), $this->actualResult);
     }
 }

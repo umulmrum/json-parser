@@ -13,9 +13,7 @@ class ValueState implements StateInterface
     use WhitespaceTrait;
 
     /**
-     * @param DataSourceInterface $dataSource
-     * @return ValueInterface
-     * @throws InvalidJsonException
+     * {@inheritDoc}
      */
     public function run(DataSourceInterface $dataSource): ?ValueInterface
     {

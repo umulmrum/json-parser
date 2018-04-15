@@ -9,7 +9,6 @@ use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\DataSource\StringDataSource;
 use umulmrum\JsonParser\InvalidJsonException;
 use umulmrum\JsonParser\JsonParser;
-use umulmrum\JsonParser\Value\ObjectValue;
 
 class JsonParserTest extends TestCase
 {
@@ -30,6 +29,9 @@ class JsonParserTest extends TestCase
      */
     private $actualResult;
 
+    /**
+     * {@inheritDoc}
+     */
     protected function tearDown()
     {
         parent::tearDown();
@@ -64,6 +66,7 @@ class JsonParserTest extends TestCase
             [ 'arraySingleElement' ],
             [ 'arrayMultipleSimpleElements' ],
             [ 'arrayMultipleArrayElements' ],
+            [ 'arrayMultipleArrayElementsWithLessWhitespace' ],
             [ 'objectEmpty' ],
             [ 'objectSingleElement' ],
             [ 'objectMultipleSimpleElements' ],

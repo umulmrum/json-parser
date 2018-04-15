@@ -33,7 +33,17 @@ abstract class AbstractKeywordState implements StateInterface
             sprintf('Unexpected end of data, "%s" value expected', $this->getValue()->getValue()), $dataSource);
     }
 
+    /**
+     * Returns the keyword to match.
+     *
+     * @return string
+     */
     abstract protected function getWord(): string;
 
+    /**
+     * Returns the ValueInterface to return if the keyword was successfully matched.
+     *
+     * @return ValueInterface
+     */
     abstract protected function getValue(): ValueInterface;
 }

@@ -33,6 +33,7 @@ class JsonParser
     /**
      * @return array|null
      *
+     * @throws DataSourceException
      * @throws InvalidJsonException
      */
     public function all(): ?array
@@ -68,6 +69,8 @@ class JsonParser
 
     /**
      * @return \Generator
+     *
+     * @throws DataSourceException
      * @throws InvalidJsonException
      */
     public function generate(): \Generator
@@ -91,7 +94,10 @@ class JsonParser
 
     /**
      * @param StateInterface $previousState
+     *
      * @return StateInterface
+     *
+     * @throws DataSourceException
      * @throws InvalidJsonException
      */
     private function getNextState(StateInterface $previousState)
@@ -109,15 +115,13 @@ class JsonParser
                     }
 
                     return $previousState;
-//                    $isNextElementRequested = true;
-//                    break;
                 case '[':
                     if (true === $isNextElementRequested) {
                         if (States::$ROOT_ARRAY === $previousState) {
                             return $previousState;
-                        } else {
-                            InvalidJsonException::trigger('Invalid character "["', $this->dataSource);
                         }
+
+                        InvalidJsonException::trigger('Invalid character "["', $this->dataSource);
                     } else {
                         return States::$ROOT_ARRAY;
                     }
@@ -128,9 +132,9 @@ class JsonParser
                     if (true === $isNextElementRequested) {
                         if (States::$ROOT_OBJECT === $previousState) {
                             return $previousState;
-                        } else {
-                            InvalidJsonException::trigger('Invalid character "{"', $this->dataSource);
                         }
+
+                        InvalidJsonException::trigger('Invalid character "{"', $this->dataSource);
                     } else {
                         return States::$ROOT_OBJECT;
                     }
@@ -147,6 +151,11 @@ class JsonParser
         return States::$DOCUMENT_END;
     }
 
+    /**
+     * @param string $data
+     *
+     * @return JsonParser
+     */
     public static function fromString(string $data): JsonParser
     {
         return new JsonParser(new StringDataSource($data));

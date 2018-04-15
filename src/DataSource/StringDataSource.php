@@ -30,6 +30,9 @@ class StringDataSource extends AbstractDataSource
         $this->length = \mb_strlen($data);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function read(): ?string
     {
         if ($this->position >= $this->length) {
@@ -52,11 +55,17 @@ class StringDataSource extends AbstractDataSource
         return $char;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function rewind(): void
     {
         $this->position--;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function finish(): void
     {
         $this->data = null;
