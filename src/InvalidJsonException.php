@@ -1,9 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser;
-
-
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 
@@ -43,10 +40,11 @@ class InvalidJsonException extends \Exception
     }
 
     /**
-     * Convenience method to throw an InvalidJsonException
+     * Convenience method to throw an InvalidJsonException.
      *
-     * @param string $message
+     * @param string              $message
      * @param DataSourceInterface $dataSource
+     *
      * @throws InvalidJsonException
      */
     public static function trigger(string $message, DataSourceInterface $dataSource): void

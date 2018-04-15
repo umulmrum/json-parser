@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\State;
-
 
 use umulmrum\JsonParser\Value\NullValue;
 use umulmrum\JsonParser\Value\ValueInterface;
@@ -10,7 +8,7 @@ use umulmrum\JsonParser\Value\ValueInterface;
 class NullState extends AbstractKeywordState
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function getWord(): string
     {
@@ -18,7 +16,7 @@ class NullState extends AbstractKeywordState
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function getValue(): ValueInterface
     {

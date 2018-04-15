@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\State;
-
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
@@ -92,7 +90,7 @@ class StringState implements StateInterface
                                     sprintf('Unexpected character "%s", hexadecimal number expected', $char), $dataSource);
                             }
                             $part .= $char;
-                            $count++;
+                            ++$count;
                         }
                         $result .= \chr(\hexdec($part));
                         $isEscaped = false;

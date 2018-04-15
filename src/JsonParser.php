@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser;
-
 
 use umulmrum\JsonParser\DataSource\DataSourceException;
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
@@ -13,7 +11,6 @@ use umulmrum\JsonParser\State\States;
 use umulmrum\JsonParser\State\WhitespaceTrait;
 use umulmrum\JsonParser\Value\EmptyValue;
 use umulmrum\JsonParser\Value\ObjectValue;
-use umulmrum\JsonParser\Value\ObjectValueList;
 use umulmrum\JsonParser\Value\ValueInterface;
 
 class JsonParser
@@ -125,6 +122,7 @@ class JsonParser
                     } else {
                         return States::$ROOT_ARRAY;
                     }
+                    // no break
                 case ']':
                 case '}':
                     return States::$DOCUMENT_END;
@@ -138,6 +136,7 @@ class JsonParser
                     } else {
                         return States::$ROOT_OBJECT;
                     }
+                    // no break
                 default:
                     if (States::$DOCUMENT_START === $previousState) {
                         $message = sprintf('Unexpected character "%s", expected one of "[", "{"', $char);
@@ -163,6 +162,7 @@ class JsonParser
 
     /**
      * @param string $filePath
+     *
      * @return JsonParser
      *
      * @throws DataSourceException

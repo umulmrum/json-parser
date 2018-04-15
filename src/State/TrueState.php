@@ -1,18 +1,14 @@
 <?php
 
-
 namespace umulmrum\JsonParser\State;
 
-
-use umulmrum\JsonParser\DataSource\DataSourceInterface;
-use umulmrum\JsonParser\InvalidJsonException;
 use umulmrum\JsonParser\Value\TrueValue;
 use umulmrum\JsonParser\Value\ValueInterface;
 
 class TrueState extends AbstractKeywordState
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function getWord(): string
     {
@@ -20,7 +16,7 @@ class TrueState extends AbstractKeywordState
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function getValue(): ValueInterface
     {

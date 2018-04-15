@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\Value;
-
 
 class ObjectValue implements ValueInterface
 {
@@ -52,6 +50,4 @@ class ObjectValue implements ValueInterface
     {
         $this->value = $value;
     }
-
-
 }

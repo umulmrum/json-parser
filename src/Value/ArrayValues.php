@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\Value;
-
 
 class ArrayValues implements ValueInterface
 {
@@ -17,7 +15,7 @@ class ArrayValues implements ValueInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getValue()
     {

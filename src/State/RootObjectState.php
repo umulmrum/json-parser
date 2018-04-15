@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\State;
-
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
@@ -58,6 +56,7 @@ class RootObjectState implements StateInterface
                     return $value;
                 case ',':
                     InvalidJsonException::trigger('Invalid character ","', $dataSource);
+                    // no break
                 default:
                     InvalidJsonException::trigger(
                         sprintf('Invalid character "%s", expected one of ["{", "["]', $char),

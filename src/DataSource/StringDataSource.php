@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\DataSource;
-
 
 class StringDataSource extends AbstractDataSource
 {
@@ -31,7 +29,7 @@ class StringDataSource extends AbstractDataSource
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function read(): ?string
     {
@@ -39,13 +37,13 @@ class StringDataSource extends AbstractDataSource
             return null;
         }
         $char = mb_substr($this->data, $this->position, 1);
-        $this->position++;
+        ++$this->position;
         if (true === $this->lastCharWasLineFeed) {
-            $this->line++;
+            ++$this->line;
             $this->col = 1;
             $this->lastCharWasLineFeed = false;
         } else {
-            $this->col++;
+            ++$this->col;
         }
 
         if ("\n" === $char) {
@@ -56,15 +54,15 @@ class StringDataSource extends AbstractDataSource
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function rewind(): void
     {
-        $this->position--;
+        --$this->position;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function finish(): void
     {

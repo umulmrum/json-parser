@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\Test\DataSource;
-
 
 use PHPUnit\Framework\TestCase;
 use umulmrum\JsonParser\DataSource\StringDataSource;
@@ -19,7 +17,7 @@ class StringDataSourceTest extends TestCase
     private $actualResult;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function tearDown()
     {

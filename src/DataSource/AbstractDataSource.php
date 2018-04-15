@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\DataSource;
-
 
 abstract class AbstractDataSource implements DataSourceInterface
 {
@@ -16,7 +14,7 @@ abstract class AbstractDataSource implements DataSourceInterface
     protected $col = 1;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCurrentLine(): int
     {
@@ -24,7 +22,7 @@ abstract class AbstractDataSource implements DataSourceInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCurrentCol(): int
     {

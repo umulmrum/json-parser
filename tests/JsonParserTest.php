@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\Test;
-
 
 use PHPUnit\Framework\TestCase;
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
@@ -30,7 +28,7 @@ class JsonParserTest extends TestCase
     private $actualResult;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function tearDown()
     {
@@ -59,22 +57,22 @@ class JsonParserTest extends TestCase
     public function provideDataForTestAllValid(): array
     {
         return [
-            [ 'empty' ],
-            [ 'whitespace' ],
-            [ 'arrayEmpty' ],
-            [ 'arrayNested' ],
-            [ 'arraySingleElement' ],
-            [ 'arrayMultipleSimpleElements' ],
-            [ 'arrayMultipleArrayElements' ],
-            [ 'arrayMultipleArrayElementsWithLessWhitespace' ],
-            [ 'objectEmpty' ],
-            [ 'objectSingleElement' ],
-            [ 'objectMultipleSimpleElements' ],
-            [ 'objectNested' ],
-            [ 'composer' ],
-            [ 'products' ], // Taken from https://www.sitepoint.com/database-json-file/
-            [ 'tweet' ], // Taken from https://www.sitepoint.com/twitter-json-example/ (and fixed)
-            [ 'webapp' ], // Taken from https://www.json.org/example.html
+            ['empty'],
+            ['whitespace'],
+            ['arrayEmpty'],
+            ['arrayNested'],
+            ['arraySingleElement'],
+            ['arrayMultipleSimpleElements'],
+            ['arrayMultipleArrayElements'],
+            ['arrayMultipleArrayElementsWithLessWhitespace'],
+            ['objectEmpty'],
+            ['objectSingleElement'],
+            ['objectMultipleSimpleElements'],
+            ['objectNested'],
+            ['composer'],
+            ['products'], // Taken from https://www.sitepoint.com/database-json-file/
+            ['tweet'], // Taken from https://www.sitepoint.com/twitter-json-example/ (and fixed)
+            ['webapp'], // Taken from https://www.json.org/example.html
         ];
     }
 
@@ -118,10 +116,10 @@ class JsonParserTest extends TestCase
     public function provideDataForTestAllInvalid(): array
     {
         return [
-            [ 'arrayStartOnly' ],
-            [ 'commaOnly' ],
-            [ 'objectStartOnly' ],
-            [ 'objectTrailingComma' ],
+            ['arrayStartOnly'],
+            ['commaOnly'],
+            ['objectStartOnly'],
+            ['objectTrailingComma'],
         ];
     }
 

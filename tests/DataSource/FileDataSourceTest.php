@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\Test\DataSource;
-
 
 use PHPUnit\Framework\TestCase;
 use umulmrum\JsonParser\DataSource\FileDataSource;
@@ -19,7 +17,7 @@ class FileDataSourceTest extends TestCase
     private $actualResult;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function tearDown()
     {
@@ -43,11 +41,11 @@ class FileDataSourceTest extends TestCase
     public function provideDataForTestReadData(): array
     {
         return [
-            [ 'empty.txt' ],
-            [ 'singleChar.txt' ],
-            [ 'singleUmlaut.txt', ],
-            [ 'exceedBufferSize.txt', ],
-            [ 'umlautsOnBufferEdges.txt', ],
+            ['empty.txt'],
+            ['singleChar.txt'],
+            ['singleUmlaut.txt'],
+            ['exceedBufferSize.txt'],
+            ['umlautsOnBufferEdges.txt'],
         ];
     }
 
@@ -58,7 +56,7 @@ class FileDataSourceTest extends TestCase
 
     private function getFilePath(string $fileName): string
     {
-        return __DIR__ . '/fixtures/' . $fileName;
+        return __DIR__.'/fixtures/'.$fileName;
     }
 
     private function whenAllDataIsReadFromTheDataSource(): void

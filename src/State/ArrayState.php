@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\State;
-
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
@@ -15,7 +13,7 @@ class ArrayState implements StateInterface
     use WhitespaceTrait;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function run(DataSourceInterface $dataSource): ?ValueInterface
     {

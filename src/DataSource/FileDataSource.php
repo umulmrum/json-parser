@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\DataSource;
-
 
 class FileDataSource extends AbstractDataSource
 {
@@ -36,28 +34,28 @@ class FileDataSource extends AbstractDataSource
 
     /**
      * @param string $filePath
-     * @param int $bufferSize
+     * @param int    $bufferSize
      *
      * @throws DataSourceException
      */
     public function __construct(string $filePath, int $bufferSize = 100)
     {
         if (false === \file_exists($filePath)) {
-            throw new DataSourceException('File does not exist: ' . $filePath);
+            throw new DataSourceException('File does not exist: '.$filePath);
         }
         if (false === \is_readable($filePath)) {
-            throw new DataSourceException('File is not readable: ' . $filePath);
+            throw new DataSourceException('File is not readable: '.$filePath);
         }
 
         $this->bufferSize = $bufferSize;
         $this->fileHandle = \fopen($filePath, 'rb');
         if (false === $this->fileHandle) {
-            throw new DataSourceException('File could not be opened: ' . $filePath);
+            throw new DataSourceException('File could not be opened: '.$filePath);
         }
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function read(): ?string
     {
@@ -85,12 +83,12 @@ class FileDataSource extends AbstractDataSource
             }
         }
         $char = mb_substr($this->buffer, $this->position, 1);
-        $this->position++;
+        ++$this->position;
         if ("\n" === $this->lastChar) {
-            $this->line++;
+            ++$this->line;
             $this->col = 1;
         } else {
-            $this->col++;
+            ++$this->col;
         }
         $this->lastChar = $char;
 
@@ -98,7 +96,7 @@ class FileDataSource extends AbstractDataSource
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function rewind(): void
     {
@@ -106,7 +104,7 @@ class FileDataSource extends AbstractDataSource
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function finish(): void
     {

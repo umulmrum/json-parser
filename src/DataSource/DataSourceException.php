@@ -1,6 +1,5 @@
 <?php
 
-
 namespace umulmrum\JsonParser\DataSource;
 
 /**
@@ -8,5 +7,4 @@ namespace umulmrum\JsonParser\DataSource;
  */
 class DataSourceException extends \Exception
 {
-
 }

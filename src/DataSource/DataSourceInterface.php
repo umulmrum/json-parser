@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\DataSource;
-
 
 interface DataSourceInterface
 {

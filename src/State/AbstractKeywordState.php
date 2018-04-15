@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\State;
-
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
@@ -11,7 +9,7 @@ use umulmrum\JsonParser\Value\ValueInterface;
 abstract class AbstractKeywordState implements StateInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function run(DataSourceInterface $dataSource): ?ValueInterface
     {
