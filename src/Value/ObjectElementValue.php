@@ -2,7 +2,7 @@
 
 namespace umulmrum\JsonParser\Value;
 
-class ObjectValue implements ValueInterface
+class ObjectElementValue implements ValueInterface
 {
     /**
      * @var string|int
@@ -37,9 +37,6 @@ class ObjectValue implements ValueInterface
 
     public function getValue()
     {
-//        return [
-//            $this->key => $this->value->getValue(),
-//        ];
         return $this->value->getValue();
     }
 

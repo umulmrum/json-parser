@@ -7,7 +7,7 @@ use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\DataSource\StringDataSource;
 use umulmrum\JsonParser\InvalidJsonException;
 use umulmrum\JsonParser\JsonParser;
-use umulmrum\JsonParser\Value\ObjectValueList;
+use umulmrum\JsonParser\Value\ObjectListValue;
 
 class JsonParserTest extends TestCase
 {
@@ -70,6 +70,7 @@ class JsonParserTest extends TestCase
             ['objectEmpty'],
             ['objectSingleElement'],
             ['objectMultipleSimpleElements'],
+            ['objectMultipleObjectElements'],
             ['objectNested'],
             ['composer'],
             ['products'], // Taken from https://www.sitepoint.com/database-json-file/
@@ -164,26 +165,41 @@ class JsonParserTest extends TestCase
 
     private function thenTheFirstArrayElementShouldBeReturned(): void
     {
+        /**
+         * @var ObjectListValue $element
+         */
+        $element = $this->actualResult->current();
+        $this->assertEquals(0, $element->getFirstKey());
         $this->assertEquals([
             'foo',
             'bar',
-        ], $this->actualResult->current()->getValue());
+        ], $element->getFirstValue()->getValue());
     }
 
     private function thenTheSecondArrayElementShouldBeReturned()
     {
+        /**
+         * @var ObjectListValue $element
+         */
+        $element = $this->actualResult->current();
+        $this->assertEquals(1, $element->getFirstKey());
         $this->assertEquals([
             'bar',
             'baz',
-        ], $this->actualResult->current()->getValue());
+        ], $element->getFirstValue()->getValue());
     }
 
     private function thenTheThirdArrayElementShouldBeReturned()
     {
+        /**
+         * @var ObjectListValue $element
+         */
+        $element = $this->actualResult->current();
+        $this->assertEquals(2, $element->getFirstKey());
         $this->assertEquals([
             'such',
             'value',
-        ], $this->actualResult->current()->getValue());
+        ], $element->getFirstValue()->getValue());
     }
 
     public function testGenerateArrayContainingObjects(): void
@@ -192,57 +208,65 @@ class JsonParserTest extends TestCase
         $this->givenAJsonParser();
 
         $this->whenGenerateIsCalled();
-        $this->thenTheFirstObjectElementShouldBeReturned();
+        $this->thenTheFirstObjectElementShouldBeReturned(0);
 
         $this->whenNextIsCalled();
-        $this->thenTheSecondObjectElementShouldBeReturned();
+        $this->thenTheSecondObjectElementShouldBeReturned(1);
 
         $this->whenNextIsCalled();
-        $this->thenTheThirdObjectElementShouldBeReturned();
+        $this->thenTheThirdObjectElementShouldBeReturned(2);
     }
 
-    private function thenTheFirstObjectElementShouldBeReturned()
+    private function thenTheFirstObjectElementShouldBeReturned($expectedKey)
     {
         /**
-         * @var ObjectValueList $element
+         * @var ObjectListValue $element
          */
         $element = $this->actualResult->current();
-        $firstValue = $element->getFirstValue();
-        $this->assertEquals(0, $element->getFirstKey());
+        $this->assertEquals($expectedKey, $element->getFirstKey());
         $this->assertEquals([
             'foo' => 'bar',
-        ], [
-            $firstValue->getKey() => $firstValue->getValue(),
-        ]);
+        ], $element->getFirstValue()->getValue());
     }
 
-    private function thenTheSecondObjectElementShouldBeReturned()
+    private function thenTheSecondObjectElementShouldBeReturned($expectedKey)
     {
         /**
-         * @var ObjectValueList $element
+         * @var ObjectListValue $element
          */
         $element = $this->actualResult->current();
         $firstValue = $element->getFirstValue();
-        $this->assertEquals(0, $element->getFirstKey());
+        $this->assertEquals($expectedKey, $element->getFirstKey());
         $this->assertEquals([
             'bar' => 'baz',
-        ], [
-            $firstValue->getKey() => $firstValue->getValue(),
-        ]);
+            ], $firstValue->getValue());
     }
 
-    private function thenTheThirdObjectElementShouldBeReturned()
+    private function thenTheThirdObjectElementShouldBeReturned($expectedKey)
     {
         /**
-         * @var ObjectValueList $element
+         * @var ObjectListValue $element
          */
         $element = $this->actualResult->current();
         $firstValue = $element->getFirstValue();
-        $this->assertEquals(0, $element->getFirstKey());
+        $this->assertEquals($expectedKey, $element->getFirstKey());
         $this->assertEquals([
             'such' => 'value',
-        ], [
-            $firstValue->getKey() => $firstValue->getValue(),
-        ]);
+        ], $firstValue->getValue());
+    }
+
+    public function testGenerateObjectContainingObjects(): void
+    {
+        $this->givenADataSourceForValidFiles('objectMultipleObjectElements');
+        $this->givenAJsonParser();
+
+        $this->whenGenerateIsCalled();
+        $this->thenTheFirstObjectElementShouldBeReturned('key1');
+
+        $this->whenNextIsCalled();
+        $this->thenTheSecondObjectElementShouldBeReturned('key2');
+
+        $this->whenNextIsCalled();
+        $this->thenTheThirdObjectElementShouldBeReturned('key3');
     }
 }

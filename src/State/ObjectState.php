@@ -4,8 +4,8 @@ namespace umulmrum\JsonParser\State;
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
-use umulmrum\JsonParser\Value\ObjectValue;
-use umulmrum\JsonParser\Value\ObjectValueList;
+use umulmrum\JsonParser\Value\ObjectElementValue;
+use umulmrum\JsonParser\Value\ObjectListValue;
 use umulmrum\JsonParser\Value\ValueInterface;
 
 class ObjectState implements StateInterface
@@ -17,11 +17,11 @@ class ObjectState implements StateInterface
      */
     public function run(DataSourceInterface $dataSource): ?ValueInterface
     {
-        $values = new ObjectValueList();
+        $values = new ObjectListValue();
         $keyFound = false;
         $valueFound = false;
         $nextElementRequested = false;
-        $currentValue = new ObjectValue();
+        $currentValue = new ObjectElementValue();
 
         while (null !== $char = $dataSource->read()) {
             if (true === $this->isWhitespace($char)) {
@@ -64,7 +64,7 @@ class ObjectState implements StateInterface
                     if (true === $keyFound) {
                         InvalidJsonException::trigger('Invalid character ",", expected value', $dataSource);
                     }
-                    $currentValue = new ObjectValue();
+                    $currentValue = new ObjectElementValue();
                     $values->addValue($currentValue);
                     $nextElementRequested = true;
                     break;

@@ -1,0 +1,11 @@
+{
+    "key1": {
+        "foo":"bar"
+    },
+    "key2": {
+        "bar":"baz"
+    },
+    "key3": {
+        "such":"value"
+    }
+}

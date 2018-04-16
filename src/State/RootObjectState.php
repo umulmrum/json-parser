@@ -5,7 +5,8 @@ namespace umulmrum\JsonParser\State;
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
 use umulmrum\JsonParser\Value\EmptyValue;
-use umulmrum\JsonParser\Value\ObjectValue;
+use umulmrum\JsonParser\Value\ObjectElementValue;
+use umulmrum\JsonParser\Value\ObjectListValue;
 use umulmrum\JsonParser\Value\ValueInterface;
 
 class RootObjectState implements StateInterface
@@ -19,7 +20,8 @@ class RootObjectState implements StateInterface
     {
         $keyFound = false;
         $valueFound = false;
-        $value = new ObjectValue();
+        $value = new ObjectListValue();
+        $element = new ObjectElementValue();
 
         while (null !== $char = $dataSource->read()) {
             if (true === $this->isWhitespace($char)) {
@@ -39,7 +41,7 @@ class RootObjectState implements StateInterface
                     if (true === $keyFound) {
                         InvalidJsonException::trigger('Invalid character \'"\', ":" expected', $dataSource);
                     }
-                    $value->setKey(States::$STRING->run($dataSource)->getValue());
+                    $element->setKey(States::$STRING->run($dataSource)->getValue());
                     $keyFound = true;
                     $valueFound = false;
                     break;
@@ -51,12 +53,12 @@ class RootObjectState implements StateInterface
                         InvalidJsonException::trigger('Unexpected object value. Key or end of object expected',
                             $dataSource);
                     }
-                    $value->setValue(States::$VALUE->run($dataSource));
+                    $element->setValue(States::$VALUE->run($dataSource));
+                    $value->addValue($element);
 
                     return $value;
                 case ',':
                     InvalidJsonException::trigger('Invalid character ","', $dataSource);
-                    // no break
                 default:
                     InvalidJsonException::trigger(
                         sprintf('Invalid character "%s", expected one of ["{", "["]', $char),

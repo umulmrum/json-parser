@@ -4,8 +4,8 @@ namespace umulmrum\JsonParser\State;
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
-use umulmrum\JsonParser\Value\ObjectValue;
-use umulmrum\JsonParser\Value\ObjectValueList;
+use umulmrum\JsonParser\Value\ObjectElementValue;
+use umulmrum\JsonParser\Value\ObjectListValue;
 use umulmrum\JsonParser\Value\ValueInterface;
 
 class ArrayState implements StateInterface
@@ -17,7 +17,7 @@ class ArrayState implements StateInterface
      */
     public function run(DataSourceInterface $dataSource): ?ValueInterface
     {
-        $values = new ObjectValueList();
+        $values = new ObjectListValue();
         $key = 0;
         $isNextValue = false;
         while (null !== $char = $dataSource->read()) {
@@ -40,7 +40,7 @@ class ArrayState implements StateInterface
                 default:
                     $isNextValue = false;
                     $dataSource->rewind();
-                    $currentValue = new ObjectValue();
+                    $currentValue = new ObjectElementValue();
                     $currentValue->setKey($key);
                     $currentValue->setValue(States::$VALUE->run($dataSource));
                     $values->addValue($currentValue);

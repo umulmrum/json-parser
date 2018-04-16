@@ -10,7 +10,7 @@ use umulmrum\JsonParser\State\StateInterface;
 use umulmrum\JsonParser\State\States;
 use umulmrum\JsonParser\State\WhitespaceTrait;
 use umulmrum\JsonParser\Value\EmptyValue;
-use umulmrum\JsonParser\Value\ObjectValue;
+use umulmrum\JsonParser\Value\ObjectListValue;
 use umulmrum\JsonParser\Value\ValueInterface;
 
 class JsonParser
@@ -47,14 +47,9 @@ class JsonParser
                 }
                 $hasResult = true;
                 /**
-                 * @var ObjectValue $value
+                 * @var ObjectListValue $value
                  */
-                if ($value instanceof ObjectValue) {
-                    $result[$value->getKey()] = $value->getValue();
-                } else {
-                    $result[] = $value->getValue();
-                }
-//                $result = array_merge($result, $value->getValue());
+                $result[$value->getFirstKey()] = $value->getFirstValue()->getValue();
             }
         }
         if (false === $hasResult) {
@@ -73,12 +68,24 @@ class JsonParser
     public function generate(): \Generator
     {
         $state = States::$DOCUMENT_START;
+        $index = 0;
 
         try {
             while (States::$DOCUMENT_END !== $state) {
-                $value = $state->run($this->dataSource);
+                /**
+                 * @var ObjectListValue $value
+                 */
+                $value = $state->run($this->dataSource, 0);
                 $state = $this->getNextState($state);
                 if (null !== $value) {
+                    if ($value instanceof ObjectListValue && 0 === $value->getFirstKey()) {
+                        $element = $value->getFirstValue();
+                        $element->setKey($index);
+                        $value = new ObjectListValue();
+                        $value->addValue($element);
+                    }
+                    ++$index;
+
                     yield $value;
                 }
             }

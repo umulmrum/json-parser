@@ -9,51 +9,51 @@ namespace umulmrum\JsonParser\State;
 class States
 {
     /**
-     * @var StateInterface
+     * @var DocumentStartState
      */
     public static $DOCUMENT_START;
     /**
-     * @var StateInterface
+     * @var DocumentEndState
      */
     public static $DOCUMENT_END;
     /**
-     * @var StateInterface
+     * @var RootArrayState
      */
     public static $ROOT_ARRAY;
     /**
-     * @var StateInterface
+     * @var RootObjectState
      */
     public static $ROOT_OBJECT;
     /**
-     * @var StateInterface
+     * @var ObjectState
      */
     public static $OBJECT;
     /**
-     * @var StateInterface
+     * @var ArrayState
      */
     public static $ARRAY;
     /**
-     * @var StateInterface
+     * @var ValueState
      */
     public static $VALUE;
     /**
-     * @var StateInterface
+     * @var StringState
      */
     public static $STRING;
     /**
-     * @var StateInterface
+     * @var NumericState
      */
     public static $NUMERIC;
     /**
-     * @var StateInterface
+     * @var TrueState
      */
     public static $TRUE;
     /**
-     * @var StateInterface
+     * @var FalseState
      */
     public static $FALSE;
     /**
-     * @var StateInterface
+     * @var NullState
      */
     public static $NULL;
 

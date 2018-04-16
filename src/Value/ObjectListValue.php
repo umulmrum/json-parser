@@ -2,14 +2,14 @@
 
 namespace umulmrum\JsonParser\Value;
 
-class ObjectValueList implements ValueInterface
+class ObjectListValue implements ValueInterface
 {
     /**
-     * @var ObjectValue[]
+     * @var ObjectElementValue[]
      */
     private $valueList = [];
 
-    public function addValue(ObjectValue $value)
+    public function addValue(ObjectElementValue $value)
     {
         $this->valueList[] = $value;
     }
@@ -34,10 +34,15 @@ class ObjectValueList implements ValueInterface
 
     public function getFirstKey()
     {
-        return \key($this->valueList);
+        $firstValue = $this->getFirstValue();
+        if (null === $firstValue) {
+            return null;
+        }
+
+        return $firstValue->getKey();
     }
 
-    public function getFirstValue(): ?ObjectValue
+    public function getFirstValue(): ?ObjectElementValue
     {
         $value = \current($this->valueList);
         if (false === $value) {
