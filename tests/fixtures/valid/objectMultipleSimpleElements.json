@@ -3,6 +3,7 @@
     "baz": "quux\"",
     "many": "value\\",
     "such": "json\\\"",
+    "so": "j/s\/on\\\\\\",
     "e": 2e3,
     "e+": 3e+5,
     "e-": 2e-3,

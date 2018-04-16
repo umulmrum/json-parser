@@ -34,6 +34,10 @@ class StringState implements StateInterface
                         $isEscaped = true;
                     }
                     break;
+                case '/':
+                    $isEscaped = false;
+                    $result .= '/';
+                    break;
                 case 'b':
                     if (true === $isEscaped) {
                         $result .= "\b";
@@ -99,6 +103,10 @@ class StringState implements StateInterface
                     }
                     break;
                 default:
+                    if (true === $isEscaped) {
+                        InvalidJsonException::trigger(
+                            sprintf('Unexpected character "%s, escaped character sequence expected', $char), $dataSource);
+                    }
                     $result .= $char;
             }
         }

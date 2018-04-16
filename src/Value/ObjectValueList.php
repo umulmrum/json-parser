@@ -19,6 +19,9 @@ class ObjectValueList implements ValueInterface
         return $this->valueList;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getValue(): array
     {
         $result = [];
@@ -29,16 +32,18 @@ class ObjectValueList implements ValueInterface
         return $result;
     }
 
-//    /**
-//     * {@inheritDoc}
-//     */
-//    public function getValues()
-//    {
-//        $values = [];
-//        foreach ($this->values as $value) {
-//            $values[$value->getKey()] = $value->getValue()->getValue();
-//        }
-//
-//        return $values;
-//    }
+    public function getFirstKey()
+    {
+        return \key($this->valueList);
+    }
+
+    public function getFirstValue(): ?ObjectValue
+    {
+        $value = \current($this->valueList);
+        if (false === $value) {
+            return null;
+        }
+
+        return $value;
+    }
 }
