@@ -36,7 +36,7 @@ class JsonParser
         $hasResult = false;
         foreach ($this->generate() as $value) {
             if (null !== $value) {
-                if (0 ===\count($value)) {
+                if (0 === \count($value)) {
                     return [];
                 }
                 $hasResult = true;

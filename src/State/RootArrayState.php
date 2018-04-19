@@ -23,7 +23,7 @@ class RootArrayState implements StateInterface
             }
             $dataSource->rewind();
 
-            return [ States::$VALUE->run($dataSource) ];
+            return [States::$VALUE->run($dataSource)];
         }
 
         InvalidJsonException::trigger('Unexpected end of data, end of array expected', $dataSource);

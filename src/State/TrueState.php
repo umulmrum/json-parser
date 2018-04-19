@@ -2,7 +2,6 @@
 
 namespace umulmrum\JsonParser\State;
 
-
 class TrueState extends AbstractKeywordState
 {
     /**

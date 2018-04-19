@@ -99,7 +99,7 @@ class StringState implements StateInterface
 
     /**
      * Returns a unicode character.
-     * See also https://unicodebook.readthedocs.io/unicode_encodings.html#surrogates
+     * See also https://unicodebook.readthedocs.io/unicode_encodings.html#surrogates.
      *
      * @param DataSourceInterface $dataSource
      *
@@ -136,6 +136,7 @@ class StringState implements StateInterface
 
     /**
      * @param DataSourceInterface $dataSource
+     *
      * @return int
      *
      * @throws DataSourceException

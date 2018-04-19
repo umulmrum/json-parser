@@ -53,6 +53,7 @@ class RootObjectState implements StateInterface
                     ];
                 case ',':
                     InvalidJsonException::trigger('Invalid character ","', $dataSource);
+                    // no break
                 default:
                     InvalidJsonException::trigger(
                         sprintf('Invalid character "%s", expected one of ["{", "["]', $char),
