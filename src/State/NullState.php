@@ -2,9 +2,6 @@
 
 namespace umulmrum\JsonParser\State;
 
-use umulmrum\JsonParser\Value\NullValue;
-use umulmrum\JsonParser\Value\ValueInterface;
-
 class NullState extends AbstractKeywordState
 {
     /**
@@ -18,8 +15,8 @@ class NullState extends AbstractKeywordState
     /**
      * {@inheritdoc}
      */
-    protected function getValue(): ValueInterface
+    protected function getValue()
     {
-        return NullValue::getInstance();
+        return null;
     }
 }

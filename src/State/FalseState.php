@@ -2,9 +2,6 @@
 
 namespace umulmrum\JsonParser\State;
 
-use umulmrum\JsonParser\Value\FalseValue;
-use umulmrum\JsonParser\Value\ValueInterface;
-
 class FalseState extends AbstractKeywordState
 {
     /**
@@ -18,8 +15,8 @@ class FalseState extends AbstractKeywordState
     /**
      * {@inheritdoc}
      */
-    protected function getValue(): ValueInterface
+    protected function getValue()
     {
-        return FalseValue::getInstance();
+        return false;
     }
 }

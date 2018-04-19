@@ -9,9 +9,6 @@ use umulmrum\JsonParser\DataSource\StringDataSource;
 use umulmrum\JsonParser\State\StateInterface;
 use umulmrum\JsonParser\State\States;
 use umulmrum\JsonParser\State\WhitespaceTrait;
-use umulmrum\JsonParser\Value\EmptyValue;
-use umulmrum\JsonParser\Value\ObjectListValue;
-use umulmrum\JsonParser\Value\ValueInterface;
 
 class JsonParser
 {
@@ -37,19 +34,13 @@ class JsonParser
     {
         $result = [];
         $hasResult = false;
-        /**
-         * @var ValueInterface $value
-         */
         foreach ($this->generate() as $value) {
             if (null !== $value) {
-                if ($value instanceof EmptyValue) {
+                if (0 ===\count($value)) {
                     return [];
                 }
                 $hasResult = true;
-                /**
-                 * @var ObjectListValue $value
-                 */
-                $result[$value->getFirstKey()] = $value->getFirstValue()->getValue();
+                $result[\key($value)] = \current($value);
             }
         }
         if (false === $hasResult) {
@@ -72,17 +63,16 @@ class JsonParser
 
         try {
             while (States::$DOCUMENT_END !== $state) {
-                /**
-                 * @var ObjectListValue $value
-                 */
                 $value = $state->run($this->dataSource, 0);
                 $state = $this->getNextState($state);
                 if (null !== $value) {
-                    if ($value instanceof ObjectListValue && 0 === $value->getFirstKey()) {
-                        $element = $value->getFirstValue();
-                        $element->setKey($index);
-                        $value = new ObjectListValue();
-                        $value->addValue($element);
+                    if (0 === \count($value)) {
+                        yield [];
+                    }
+                    if (0 === \key($value)) {
+                        $value = [
+                            $index => $value[0],
+                        ];
                     }
                     ++$index;
 

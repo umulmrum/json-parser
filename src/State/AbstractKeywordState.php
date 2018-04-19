@@ -4,14 +4,13 @@ namespace umulmrum\JsonParser\State;
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
-use umulmrum\JsonParser\Value\ValueInterface;
 
 abstract class AbstractKeywordState implements StateInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function run(DataSourceInterface $dataSource): ?ValueInterface
+    public function run(DataSourceInterface $dataSource)
     {
         $position = 0;
         $word = $this->getWord();
@@ -19,7 +18,7 @@ abstract class AbstractKeywordState implements StateInterface
         while (null !== $char = $dataSource->read()) {
             if ($word[$position] !== $char) {
                 InvalidJsonException::trigger(
-                    sprintf('"%s" expected, got something else', $this->getValue()->getValue()), $dataSource);
+                    sprintf('"%s" expected, got something else', $this->getWord()), $dataSource);
             }
             if ($position === $wordLength - 1) {
                 return $this->getValue();
@@ -28,7 +27,7 @@ abstract class AbstractKeywordState implements StateInterface
         }
 
         InvalidJsonException::trigger(
-            sprintf('Unexpected end of data, "%s" value expected', $this->getValue()->getValue()), $dataSource);
+            sprintf('Unexpected end of data, "%s" value expected', $this->getWord()), $dataSource);
     }
 
     /**
@@ -39,9 +38,9 @@ abstract class AbstractKeywordState implements StateInterface
     abstract protected function getWord(): string;
 
     /**
-     * Returns the ValueInterface to return if the keyword was successfully matched.
+     * Returns the value to return if the keyword was successfully matched.
      *
-     * @return ValueInterface
+     * @return mixed
      */
-    abstract protected function getValue(): ValueInterface;
+    abstract protected function getValue();
 }

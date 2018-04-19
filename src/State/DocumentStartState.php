@@ -3,7 +3,6 @@
 namespace umulmrum\JsonParser\State;
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
-use umulmrum\JsonParser\Value\ValueInterface;
 
 class DocumentStartState implements StateInterface
 {
@@ -12,7 +11,7 @@ class DocumentStartState implements StateInterface
     /**
      * {@inheritdoc}
      */
-    public function run(DataSourceInterface $dataSource): ?ValueInterface
+    public function run(DataSourceInterface $dataSource)
     {
         return null;
     }

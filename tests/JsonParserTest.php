@@ -7,7 +7,6 @@ use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\DataSource\StringDataSource;
 use umulmrum\JsonParser\InvalidJsonException;
 use umulmrum\JsonParser\JsonParser;
-use umulmrum\JsonParser\Value\ObjectListValue;
 
 class JsonParserTest extends TestCase
 {
@@ -165,41 +164,32 @@ class JsonParserTest extends TestCase
 
     private function thenTheFirstArrayElementShouldBeReturned(): void
     {
-        /**
-         * @var ObjectListValue $element
-         */
         $element = $this->actualResult->current();
-        $this->assertEquals(0, $element->getFirstKey());
+        $this->assertEquals(0, \key($element));
         $this->assertEquals([
             'foo',
             'bar',
-        ], $element->getFirstValue()->getValue());
+        ], \current($element));
     }
 
     private function thenTheSecondArrayElementShouldBeReturned()
     {
-        /**
-         * @var ObjectListValue $element
-         */
         $element = $this->actualResult->current();
-        $this->assertEquals(1, $element->getFirstKey());
+        $this->assertEquals(1, \key($element));
         $this->assertEquals([
             'bar',
             'baz',
-        ], $element->getFirstValue()->getValue());
+        ], \current($element));
     }
 
     private function thenTheThirdArrayElementShouldBeReturned()
     {
-        /**
-         * @var ObjectListValue $element
-         */
         $element = $this->actualResult->current();
-        $this->assertEquals(2, $element->getFirstKey());
+        $this->assertEquals(2, \key($element));
         $this->assertEquals([
             'such',
             'value',
-        ], $element->getFirstValue()->getValue());
+        ], \current($element));
     }
 
     public function testGenerateArrayContainingObjects(): void
@@ -219,40 +209,29 @@ class JsonParserTest extends TestCase
 
     private function thenTheFirstObjectElementShouldBeReturned($expectedKey)
     {
-        /**
-         * @var ObjectListValue $element
-         */
         $element = $this->actualResult->current();
-        $this->assertEquals($expectedKey, $element->getFirstKey());
+        $this->assertEquals($expectedKey, \key($element));
         $this->assertEquals([
             'foo' => 'bar',
-        ], $element->getFirstValue()->getValue());
+        ], \current($element));
     }
 
     private function thenTheSecondObjectElementShouldBeReturned($expectedKey)
     {
-        /**
-         * @var ObjectListValue $element
-         */
         $element = $this->actualResult->current();
-        $firstValue = $element->getFirstValue();
-        $this->assertEquals($expectedKey, $element->getFirstKey());
+        $this->assertEquals($expectedKey, \key($element));
         $this->assertEquals([
             'bar' => 'baz',
-            ], $firstValue->getValue());
+            ], \current($element));
     }
 
     private function thenTheThirdObjectElementShouldBeReturned($expectedKey)
     {
-        /**
-         * @var ObjectListValue $element
-         */
         $element = $this->actualResult->current();
-        $firstValue = $element->getFirstValue();
-        $this->assertEquals($expectedKey, $element->getFirstKey());
+        $this->assertEquals($expectedKey, \key($element));
         $this->assertEquals([
             'such' => 'value',
-        ], $firstValue->getValue());
+        ], \current($element));
     }
 
     public function testGenerateObjectContainingObjects(): void

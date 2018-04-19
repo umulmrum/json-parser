@@ -4,8 +4,6 @@ namespace umulmrum\JsonParser\State;
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
-use umulmrum\JsonParser\Value\NumericValue;
-use umulmrum\JsonParser\Value\ValueInterface;
 
 class NumericState implements StateInterface
 {
@@ -14,7 +12,7 @@ class NumericState implements StateInterface
     /**
      * {@inheritdoc}
      */
-    public function run(DataSourceInterface $dataSource): ?ValueInterface
+    public function run(DataSourceInterface $dataSource)
     {
         $number = '';
         $isFloat = false;
@@ -38,7 +36,7 @@ class NumericState implements StateInterface
                         case '}':
                             $dataSource->rewind();
 
-                            return new NumericValue($number, $isFloat);
+                            return $this->getNumber($number, $isFloat);
                         default:
                             InvalidJsonException::trigger(
                                 sprintf('Unexpected character %s, expected end of number', $char),
@@ -80,7 +78,7 @@ class NumericState implements StateInterface
                 case '}':
                     $dataSource->rewind();
 
-                    return new NumericValue($number, $isFloat);
+                    return $this->getNumber($number, $isFloat);
                 case 'e':
                 case 'E':
                     if (true === $hasE) {
@@ -119,5 +117,14 @@ class NumericState implements StateInterface
         }
 
         InvalidJsonException::trigger('Unexpected end of data, number termination expected', $dataSource);
+    }
+
+    private function getNumber($value, bool $isFloat)
+    {
+        if (true === $isFloat) {
+            return (float) $value;
+        }
+
+        return (int) $value;
     }
 }

@@ -4,10 +4,6 @@ namespace umulmrum\JsonParser\State;
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
-use umulmrum\JsonParser\Value\EmptyValue;
-use umulmrum\JsonParser\Value\ObjectElementValue;
-use umulmrum\JsonParser\Value\ObjectListValue;
-use umulmrum\JsonParser\Value\ValueInterface;
 
 class RootArrayState implements StateInterface
 {
@@ -16,23 +12,18 @@ class RootArrayState implements StateInterface
     /**
      * {@inheritdoc}
      */
-    public function run(DataSourceInterface $dataSource): ?ValueInterface
+    public function run(DataSourceInterface $dataSource)
     {
-        $value = new ObjectListValue();
-        $element = new ObjectElementValue(0);
-        $value->addValue($element);
         while (null !== $char = $dataSource->read()) {
             if (true === $this->isWhitespace($char)) {
                 continue;
             }
             if (']' === $char) {
-                return EmptyValue::getInstance();
+                return [];
             }
             $dataSource->rewind();
 
-            $element->setValue(States::$VALUE->run($dataSource));
-
-            return $value;
+            return [ States::$VALUE->run($dataSource) ];
         }
 
         InvalidJsonException::trigger('Unexpected end of data, end of array expected', $dataSource);

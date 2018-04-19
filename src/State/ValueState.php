@@ -4,7 +4,6 @@ namespace umulmrum\JsonParser\State;
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
-use umulmrum\JsonParser\Value\ValueInterface;
 
 class ValueState implements StateInterface
 {
@@ -13,7 +12,7 @@ class ValueState implements StateInterface
     /**
      * {@inheritdoc}
      */
-    public function run(DataSourceInterface $dataSource): ?ValueInterface
+    public function run(DataSourceInterface $dataSource)
     {
         while (null !== $char = $dataSource->read()) {
             if ($this->isWhitespace($char)) {

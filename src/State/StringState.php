@@ -5,15 +5,13 @@ namespace umulmrum\JsonParser\State;
 use umulmrum\JsonParser\DataSource\DataSourceException;
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
-use umulmrum\JsonParser\Value\StringValue;
-use umulmrum\JsonParser\Value\ValueInterface;
 
 class StringState implements StateInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function run(DataSourceInterface $dataSource): ?ValueInterface
+    public function run(DataSourceInterface $dataSource)
     {
         $isEscaped = false;
         $result = '';
@@ -24,7 +22,7 @@ class StringState implements StateInterface
                         $result .= '"';
                         $isEscaped = false;
                     } else {
-                        return new StringValue($result);
+                        return $result;
                     }
                     break;
                 case '\\':
