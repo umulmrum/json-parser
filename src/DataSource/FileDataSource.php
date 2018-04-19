@@ -82,7 +82,7 @@ class FileDataSource extends AbstractDataSource
                 return null;
             }
         }
-        $char = mb_substr($this->buffer, $this->position, 1);
+        $char = \mb_substr($this->buffer, $this->position, 1);
         ++$this->position;
         if ("\n" === $this->lastChar) {
             ++$this->line;
