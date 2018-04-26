@@ -5,7 +5,7 @@ JSON Parser is a streaming JSON parsing library. It returns the same results as
 `\json_decode('some-string', true, 512, JSON_UNESCAPED_SLASHES)`.
 
 You might want to use this library when decoding JSON that is multiple MiB in size, 
-so that the in-memory approach of `\json_decode()` consumes excessive amounts of memory.
+where the in-memory approach of `\json_decode()` consumes excessive amounts of memory.
 This library has constant memory usage independent of the size of the JSON string if
 used correctly (which is not difficult, see below).
 
@@ -54,8 +54,8 @@ foreach ($parser->generate() as $value) {
 }
 ```
 
-Every valid JSON string consists of either a root list or a root object containing values.
-The generate() method returns these first-level values, one at a time. 
+Every valid JSON string consists of either a root array or a root object containing values.
+The `generate()` method returns these first-level values, one at a time. 
 Each returned value is a PHP array containing a single key/value pair; the key is 
 - the key of the first-level value if the root element is an object.
 - the index of the first-level value if the root element is an array.
@@ -87,7 +87,7 @@ $parser = umulmrum\JsonParser\JsonParser::fromString('["test"]');
 Be aware that this will not be very memory-efficient as PHP uses a lot of memory for strings. Whenever
 possible, the `fromFile()` factory method is recommended.
 
-The JsonParser can also return the complete content by calling `all()` (which is again not recommended
+JsonParser can also return the complete content by calling `all()` (which is again not recommended
 because of memory).
 
 Customization
@@ -103,7 +103,7 @@ methods.
 The example from the previous section can be written as follows:
 
 ```php
-$parser = new umulmrum\JsonParser\JsonParser(new \umulmrum\JsonParser\DataSource\FileDataSource::__construct('["test"]'));
+$parser = new umulmrum\JsonParser\JsonParser(new \umulmrum\JsonParser\DataSource\FileDataSource('["test"]'));
 ```
 
 Backwards Compatibility
