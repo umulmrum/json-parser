@@ -61,7 +61,7 @@ class JsonParserTest extends TestCase
 
     public function provideDataForTestAllValid(): array
     {
-        return $this->getTestCasesFromPath(__DIR__ . '/fixtures/valid');
+        return $this->getTestCasesFromPath(__DIR__.'/fixtures/valid');
     }
 
     private function getTestCasesFromPath(string $path): array
@@ -74,7 +74,7 @@ class JsonParserTest extends TestCase
                 continue;
             }
 
-            $files[] = [ $entry ];
+            $files[] = [$entry];
         }
 
         \closedir($dir);
@@ -121,7 +121,7 @@ class JsonParserTest extends TestCase
 
     public function provideDataForTestAllInvalid(): array
     {
-        return $this->getTestCasesFromPath(__DIR__ . '/fixtures/invalid');
+        return $this->getTestCasesFromPath(__DIR__.'/fixtures/invalid');
     }
 
     private function givenADataSourceForInvalidFiles(string $fileToCheck): void
@@ -287,8 +287,8 @@ class JsonParserTest extends TestCase
      * @dataProvider provideDataForTestErrorInfo
      *
      * @param string $fileToCheck
-     * @param int $expectedErrorLine
-     * @param int $expectedErrorColumn
+     * @param int    $expectedErrorLine
+     * @param int    $expectedErrorColumn
      */
     public function testErrorInfo(string $fileToCheck, int $expectedErrorLine, int $expectedErrorColumn): void
     {

@@ -27,6 +27,7 @@ class RootObjectState implements StateInterface
                     }
 
                     InvalidJsonException::trigger('No value found for key', $dataSource);
+                    // no break
                 case '"':
                     if (null !== $currentKey) {
                         InvalidJsonException::trigger('Invalid character \'"\', ":" expected', $dataSource);
