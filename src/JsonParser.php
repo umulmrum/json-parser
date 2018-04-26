@@ -72,20 +72,22 @@ class JsonParser
             while (States::$DOCUMENT_END !== $state) {
                 $value = $state->run($this->dataSource);
                 $state = $this->getNextState($state);
-                if (null !== $value) {
-                    $key = \key($value);
-                    if (null === $key) {
-                        yield [];
-                    }
-                    if (0 === $key) {
-                        $value = [
-                            $index => $value[0],
-                        ];
-                    }
-                    ++$index;
-
-                    yield $value;
+                if (null === $value) {
+                    continue;
                 }
+
+                $key = \key($value);
+                if (null === $key) {
+                    yield [];
+                }
+                if (0 === $key) {
+                    $value = [
+                        $index => $value[0],
+                    ];
+                }
+                ++$index;
+
+                yield $value;
             }
         } finally {
             $this->dataSource->finish();
@@ -104,41 +106,22 @@ class JsonParser
      */
     private function getNextState(StateInterface $previousState): StateInterface
     {
-        $isNextElementRequested = false;
         while (null !== $char = $this->dataSource->read()) {
             if ($this->isWhitespace($char)) {
                 continue;
             }
             switch ($char) {
                 case ',':
-                    if (States::$DOCUMENT_START === $previousState || true === $isNextElementRequested) {
+                    if (States::$DOCUMENT_START === $previousState) {
                         InvalidJsonException::trigger('Unexpected character ",", expected one of "[", "{"',
                             $this->dataSource);
                     }
 
                     return $previousState;
                 case '[':
-                    if (true === $isNextElementRequested) {
-                        if (States::$ROOT_ARRAY === $previousState) {
-                            return $previousState;
-                        }
-
-                        InvalidJsonException::trigger('Invalid character "["', $this->dataSource);
-                    } else {
-                        return States::$ROOT_ARRAY;
-                    }
-                    // no break
+                    return States::$ROOT_ARRAY;
                 case '{':
-                    if (true === $isNextElementRequested) {
-                        if (States::$ROOT_OBJECT === $previousState) {
-                            return $previousState;
-                        }
-
-                        InvalidJsonException::trigger('Invalid character "{"', $this->dataSource);
-                    } else {
-                        return States::$ROOT_OBJECT;
-                    }
-                    // no break
+                    return States::$ROOT_OBJECT;
                 case ']':
                 case '}':
                     return States::$DOCUMENT_END;

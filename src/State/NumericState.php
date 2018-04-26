@@ -18,14 +18,10 @@ class NumericState implements StateInterface
         $isFloat = false;
         $hasE = false;
         $lastCharWasE = false;
+        $lastCharWasLeadingZero = false;
         while (null !== $char = $dataSource->read()) {
             if (true === $this->isWhitespace($char)) {
                 $lastCharWasE = false;
-                if ('' === $number) {
-                    InvalidJsonException::trigger(
-                        'Unexpected whitespace character, expected digit or "-"', $dataSource);
-                }
-
                 while (null !== $char = $dataSource->read()) {
                     if (true === $this->isWhitespace($char)) {
                         continue;
@@ -43,7 +39,6 @@ class NumericState implements StateInterface
                                 $dataSource);
                     }
                 }
-                continue;
             }
 
             switch ($char) {
@@ -58,9 +53,16 @@ class NumericState implements StateInterface
                     } else {
                         $isFloat = true;
                         $number .= $char;
+                        $lastCharWasLeadingZero = false;
                     }
                     break;
                 case '0':
+                    if ('' === $number) {
+                        $lastCharWasLeadingZero = true;
+                    }
+                    $lastCharWasE = false;
+                    $number .= $char;
+                    break;
                 case '1':
                 case '2':
                 case '3':
@@ -70,6 +72,9 @@ class NumericState implements StateInterface
                 case '7':
                 case '8':
                 case '9':
+                    if (true === $lastCharWasLeadingZero) {
+                        InvalidJsonException::trigger(sprintf('Unexpected character %s, expected dot, E, or end of number', $char), $dataSource);
+                    }
                     $lastCharWasE = false;
                     $number .= $char;
                     break;
@@ -81,6 +86,7 @@ class NumericState implements StateInterface
                     return $this->getNumber($number, $isFloat);
                 case 'e':
                 case 'E':
+                    $lastCharWasLeadingZero = false;
                     if (true === $hasE) {
                         InvalidJsonException::trigger(
                             sprintf('Unexpected character "%s", expected digit or end of number', $char),

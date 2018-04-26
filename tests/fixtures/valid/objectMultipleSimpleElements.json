@@ -10,5 +10,6 @@
     "E": 2E4,
     "E+": 3.33E+5,
     "E-": 5E-2,
-    "u": "test\u002f\u002Ffoo"
+    "u": "test\u002f\u002Ffoo",
+    "very": "\b\f\n\r\t"
 }

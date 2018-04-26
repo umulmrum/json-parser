@@ -16,29 +16,35 @@ class ArrayState implements StateInterface
     {
         $values = [];
         $key = 0;
-        $isNextValue = false;
+        $isValueExpected = true;
+        $isEndExpected = true;
         while (null !== $char = $dataSource->read()) {
             if (true === $this->isWhitespace($char)) {
                 continue;
             }
             switch ($char) {
                 case ',':
-                    if (true === $isNextValue) {
+                    if (true === $isValueExpected) {
                         InvalidJsonException::trigger('Unexpected character ",", expected value', $dataSource);
                     }
-                    $isNextValue = true;
+                    $isValueExpected = true;
+                    $isEndExpected = false;
                     break;
                 case ']':
-                    if (true === $isNextValue) {
+                    if (false === $isEndExpected) {
                         InvalidJsonException::trigger('Unexpected character "]", expected value', $dataSource);
                     }
 
                     return $values;
                 default:
-                    $isNextValue = false;
+                    if (false === $isValueExpected) {
+                        InvalidJsonException::trigger(sprintf('Unexpexted character "%s", expected "," or "]"', $char), $dataSource);
+                    }
                     $dataSource->rewind();
                     $values[$key] = States::$VALUE->run($dataSource);
                     ++$key;
+                    $isValueExpected = false;
+                    $isEndExpected = true;
                     break;
             }
         }

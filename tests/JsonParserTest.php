@@ -26,6 +26,10 @@ class JsonParserTest extends TestCase
      * @var array|\Generator
      */
     private $actualResult;
+    /**
+     * @var InvalidJsonException
+     */
+    private $thrownException;
 
     /**
      * {@inheritdoc}
@@ -37,6 +41,7 @@ class JsonParserTest extends TestCase
         $this->stringToDecode = null;
         $this->jsonParser = null;
         $this->actualResult = null;
+        $this->thrownException = null;
     }
 
     /**
@@ -56,31 +61,30 @@ class JsonParserTest extends TestCase
 
     public function provideDataForTestAllValid(): array
     {
-        return [
-            ['empty'],
-            ['whitespace'],
-            ['arrayEmpty'],
-            ['arrayNested'],
-            ['arraySingleElement'],
-            ['arrayMultipleSimpleElements'],
-            ['arrayMultipleArrayElements'],
-            ['arrayMultipleArrayElementsWithLessWhitespace'],
-            ['arrayMultipleObjectElements'],
-            ['objectEmpty'],
-            ['objectSingleElement'],
-            ['objectMultipleSimpleElements'],
-            ['objectMultipleObjectElements'],
-            ['objectNested'],
-            ['composer'],
-            ['products'], // Taken from https://www.sitepoint.com/database-json-file/
-            ['tweet'], // Taken from https://www.sitepoint.com/twitter-json-example/ (and fixed)
-            ['webapp'], // Taken from https://www.json.org/example.html
-        ];
+        return $this->getTestCasesFromPath(__DIR__ . '/fixtures/valid');
+    }
+
+    private function getTestCasesFromPath(string $path): array
+    {
+        $dir = \opendir($path);
+        $files = [];
+
+        while (false !== ($entry = \readdir($dir))) {
+            if ('.' === $entry || '..' === $entry) {
+                continue;
+            }
+
+            $files[] = [ $entry ];
+        }
+
+        \closedir($dir);
+
+        return $files;
     }
 
     private function givenADataSourceForValidFiles(string $fileToCheck): void
     {
-        $filePath = sprintf('%s/fixtures/valid/%s.json', __DIR__, $fileToCheck);
+        $filePath = sprintf('%s/fixtures/valid/%s', __DIR__, $fileToCheck);
         $this->stringToDecode = \file_get_contents($filePath);
         $this->dataSource = new StringDataSource($this->stringToDecode);
     }
@@ -117,17 +121,12 @@ class JsonParserTest extends TestCase
 
     public function provideDataForTestAllInvalid(): array
     {
-        return [
-            ['arrayStartOnly'],
-            ['commaOnly'],
-            ['objectStartOnly'],
-            ['objectTrailingComma'],
-        ];
+        return $this->getTestCasesFromPath(__DIR__ . '/fixtures/invalid');
     }
 
     private function givenADataSourceForInvalidFiles(string $fileToCheck): void
     {
-        $filePath = sprintf('%s/fixtures/invalid/%s.json', __DIR__, $fileToCheck);
+        $filePath = sprintf('%s/fixtures/invalid/%s', __DIR__, $fileToCheck);
         $this->stringToDecode = \file_get_contents($filePath);
         $this->dataSource = new StringDataSource($this->stringToDecode);
     }
@@ -139,7 +138,7 @@ class JsonParserTest extends TestCase
 
     public function testGenerateArrayContainingArrays(): void
     {
-        $this->givenADataSourceForValidFiles('arrayMultipleArrayElements');
+        $this->givenADataSourceForValidFiles('arrayMultipleArrayElements.json');
         $this->givenAJsonParser();
 
         $this->whenGenerateIsCalled();
@@ -194,7 +193,7 @@ class JsonParserTest extends TestCase
 
     public function testGenerateArrayContainingObjects(): void
     {
-        $this->givenADataSourceForValidFiles('arrayMultipleObjectElements');
+        $this->givenADataSourceForValidFiles('arrayMultipleObjectElements.json');
         $this->givenAJsonParser();
 
         $this->whenGenerateIsCalled();
@@ -236,7 +235,7 @@ class JsonParserTest extends TestCase
 
     public function testGenerateObjectContainingObjects(): void
     {
-        $this->givenADataSourceForValidFiles('objectMultipleObjectElements');
+        $this->givenADataSourceForValidFiles('objectMultipleObjectElements.json');
         $this->givenAJsonParser();
 
         $this->whenGenerateIsCalled();
@@ -247,5 +246,90 @@ class JsonParserTest extends TestCase
 
         $this->whenNextIsCalled();
         $this->thenTheThirdObjectElementShouldBeReturned('key3');
+    }
+
+    /**
+     * @dataProvider provideDataForTestAllValid
+     *
+     * @param string $fileToCheck
+     */
+    public function testGenerateValid(string $fileToCheck): void
+    {
+        $this->givenADataSourceForValidFiles($fileToCheck);
+        $this->givenAJsonParser();
+        $this->whenGenerateIsCalledUntilTheDataSourceIsDepleted();
+        $this->thenTheResultShouldBeEqualToJsonDecode();
+    }
+
+    private function whenGenerateIsCalledUntilTheDataSourceIsDepleted(): void
+    {
+        $this->actualResult = [];
+        $hasResult = false;
+        foreach ($this->jsonParser->generate() as $value) {
+            if (null !== $value) {
+                $key = \key($value);
+                if (null === $key) {
+                    $this->actualResult = [];
+                    $hasResult = true;
+
+                    break;
+                }
+                $hasResult = true;
+                $this->actualResult[$key] = \current($value);
+            }
+        }
+        if (false === $hasResult) {
+            $this->actualResult = null;
+        }
+    }
+
+    /**
+     * @dataProvider provideDataForTestErrorInfo
+     *
+     * @param string $fileToCheck
+     * @param int $expectedErrorLine
+     * @param int $expectedErrorColumn
+     */
+    public function testErrorInfo(string $fileToCheck, int $expectedErrorLine, int $expectedErrorColumn): void
+    {
+        $this->markTestSkipped('Line and column info do not work correctly yet after rewinding.');
+        $this->givenADataSourceForInvalidFiles($fileToCheck);
+        $this->givenAJsonParser();
+
+        $this->whenAllIsCalledForInvalidString();
+
+        $this->thenTheExceptionShouldReportCorrectLineAndColumn($expectedErrorLine, $expectedErrorColumn);
+    }
+
+    public function provideDataForTestErrorInfo(): array
+    {
+        return [
+            [
+                'commaOnly.json',
+                1,
+                2,
+            ],
+            [
+                'objectValueDoubleKey.json',
+                4,
+                36,
+            ],
+        ];
+    }
+
+    private function whenAllIsCalledForInvalidString(): void
+    {
+        try {
+            $this->jsonParser->all();
+            $this->fail('Expected InvalidJsonException.');
+        } catch (InvalidJsonException $e) {
+            $this->thrownException = $e;
+        }
+    }
+
+    private function thenTheExceptionShouldReportCorrectLineAndColumn($expectedErrorLine, $expectedErrorColumn): void
+    {
+        $this->assertEquals($expectedErrorLine, $this->thrownException->getJsonLine());
+        $this->assertEquals($expectedErrorColumn, $this->thrownException->getJsonCol());
     }
 }

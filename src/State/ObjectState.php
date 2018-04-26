@@ -45,10 +45,6 @@ class ObjectState implements StateInterface
                     if (null === $currentKey) {
                         InvalidJsonException::trigger('Invalid character ":", \'"\' expected', $dataSource);
                     }
-                    if (true === $valueFound) {
-                        InvalidJsonException::trigger('Unexpected object value. Key or end of object expected',
-                            $dataSource);
-                    }
                     $values[$currentKey] = States::$VALUE->run($dataSource);
                     $currentKey = null;
                     $valueFound = true;

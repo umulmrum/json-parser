@@ -15,8 +15,6 @@ class RootObjectState implements StateInterface
     public function run(DataSourceInterface $dataSource)
     {
         $currentKey = null;
-        $valueFound = false;
-        $value = [];
 
         while (null !== $char = $dataSource->read()) {
             if (true === $this->isWhitespace($char)) {
@@ -24,28 +22,20 @@ class RootObjectState implements StateInterface
             }
             switch ($char) {
                 case '}':
-                    if (null === $currentKey && false === $valueFound) {
+                    if (null === $currentKey) {
                         return [];
                     }
-                    if (null !== $currentKey && false === $valueFound) {
-                        InvalidJsonException::trigger('No value found for key', $dataSource);
-                    }
 
-                    return $value;
+                    InvalidJsonException::trigger('No value found for key', $dataSource);
                 case '"':
                     if (null !== $currentKey) {
                         InvalidJsonException::trigger('Invalid character \'"\', ":" expected', $dataSource);
                     }
                     $currentKey = States::$STRING->run($dataSource);
-                    $valueFound = false;
                     break;
                 case ':':
                     if (null === $currentKey) {
                         InvalidJsonException::trigger('Invalid character ":", \'"\' expected', $dataSource);
-                    }
-                    if (true === $valueFound) {
-                        InvalidJsonException::trigger('Unexpected object value. Key or end of object expected',
-                            $dataSource);
                     }
 
                     return [

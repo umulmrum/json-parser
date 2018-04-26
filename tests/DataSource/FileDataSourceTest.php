@@ -3,7 +3,9 @@
 namespace umulmrum\JsonParser\Test\DataSource;
 
 use PHPUnit\Framework\TestCase;
+use umulmrum\JsonParser\DataSource\DataSourceException;
 use umulmrum\JsonParser\DataSource\FileDataSource;
+use umulmrum\JsonParser\InvalidJsonException;
 
 class FileDataSourceTest extends TestCase
 {
@@ -34,7 +36,9 @@ class FileDataSourceTest extends TestCase
     public function testReadData(string $fileName): void
     {
         $this->givenAFileDataSource($fileName);
+
         $this->whenAllDataIsReadFromTheDataSource();
+
         $this->thenTheResultingStringShouldEqualContentsFrom($fileName);
     }
 
@@ -44,6 +48,7 @@ class FileDataSourceTest extends TestCase
             ['empty.txt'],
             ['singleChar.txt'],
             ['singleUmlaut.txt'],
+            ['multipleChars.txt'],
             ['exceedBufferSize.txt'],
             ['umlautsOnBufferEdges.txt'],
         ];
@@ -71,5 +76,43 @@ class FileDataSourceTest extends TestCase
     private function thenTheResultingStringShouldEqualContentsFrom(string $fileName): void
     {
         $this->assertStringEqualsFile($this->getFilePath($fileName), $this->actualResult);
+    }
+
+    public function testRewind(): void
+    {
+        $this->givenAFileDataSource('multipleChars.txt');
+
+        $this->whenReadIsCalled();
+        $this->thenTheDataSourceShouldReturn('a');
+
+        $this->whenReadIsCalled();
+        $this->thenTheDataSourceShouldReturn('b');
+
+        $this->whenRewindIsCalled();
+        $this->whenReadIsCalled();
+        $this->thenTheDataSourceShouldReturn('b');
+    }
+
+    private function whenReadIsCalled(): void
+    {
+        $this->actualResult = $this->dataSource->read();
+    }
+
+    private function thenTheDataSourceShouldReturn(string $char): void
+    {
+        $this->assertEquals($char, $this->actualResult);
+    }
+
+    private function whenRewindIsCalled(): void
+    {
+        $this->dataSource->rewind();
+    }
+
+    /**
+     * @expectedException \umulmrum\JsonParser\DataSource\DataSourceException
+     */
+    public function testInvalidFile(): void
+    {
+        $this->givenAFileDataSource('foo.txt');
     }
 }

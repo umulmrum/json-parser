@@ -24,7 +24,7 @@ class EscapedStringState implements StateInterface
             case '/':
                 return $char;
             case 'b':
-                return "\b";
+                return \chr(8);
             case 'f':
                 return "\f";
             case 'n':

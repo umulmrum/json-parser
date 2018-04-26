@@ -4,6 +4,9 @@ namespace umulmrum\JsonParser;
 
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 
+/**
+ * Thrown on errors in the JSON string to parse.
+ */
 class InvalidJsonException extends \Exception
 {
     /**
