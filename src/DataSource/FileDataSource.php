@@ -8,9 +8,10 @@ class FileDataSource extends AbstractDataSource
      * @var int
      */
     private $bufferSize;
-
+    /**
+     * @var string
+     */
     private $buffer;
-
     /**
      * @var resource
      */
@@ -76,7 +77,7 @@ class FileDataSource extends AbstractDataSource
             if (false === $this->buffer) {
                 throw new DataSourceException('Error while reading from file.');
             }
-            $this->actualBufferSize = mb_strlen($this->buffer);
+            $this->actualBufferSize = \mb_strlen($this->buffer);
             $this->position = 0;
             if ('' === $this->buffer && true === \feof($this->fileHandle)) {
                 return null;

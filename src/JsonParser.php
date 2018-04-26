@@ -128,9 +128,6 @@ class JsonParser
                         return States::$ROOT_ARRAY;
                     }
                     // no break
-                case ']':
-                case '}':
-                    return States::$DOCUMENT_END;
                 case '{':
                     if (true === $isNextElementRequested) {
                         if (States::$ROOT_OBJECT === $previousState) {
@@ -142,6 +139,9 @@ class JsonParser
                         return States::$ROOT_OBJECT;
                     }
                     // no break
+                case ']':
+                case '}':
+                    return States::$DOCUMENT_END;
                 default:
                     if (States::$DOCUMENT_START === $previousState) {
                         $message = sprintf('Unexpected character "%s", expected one of "[", "{"', $char);

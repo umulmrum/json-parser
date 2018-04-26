@@ -1,8 +1,6 @@
 <?php
 
-
 namespace umulmrum\JsonParser\State;
-
 
 use umulmrum\JsonParser\DataSource\DataSourceException;
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
@@ -11,7 +9,7 @@ use umulmrum\JsonParser\InvalidJsonException;
 class EscapedStringState implements StateInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function run(DataSourceInterface $dataSource)
     {
