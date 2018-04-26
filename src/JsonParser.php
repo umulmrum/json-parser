@@ -92,8 +92,6 @@ class JsonParser
         } finally {
             $this->dataSource->finish();
         }
-
-        return null;
     }
 
     /**

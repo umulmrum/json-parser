@@ -3,9 +3,7 @@
 namespace umulmrum\JsonParser\Test\DataSource;
 
 use PHPUnit\Framework\TestCase;
-use umulmrum\JsonParser\DataSource\DataSourceException;
 use umulmrum\JsonParser\DataSource\FileDataSource;
-use umulmrum\JsonParser\InvalidJsonException;
 
 class FileDataSourceTest extends TestCase
 {
