@@ -41,6 +41,10 @@ class States
      */
     public static $STRING;
     /**
+     * @var EscapedStringState
+     */
+    public static $ESCAPED_STRING;
+    /**
      * @var NumericState
      */
     public static $NUMERIC;
@@ -67,6 +71,7 @@ class States
         self::$ARRAY = new ArrayState();
         self::$VALUE = new ValueState();
         self::$STRING = new StringState();
+        self::$ESCAPED_STRING = new EscapedStringState();
         self::$NUMERIC = new NumericState();
         self::$TRUE = new TrueState();
         self::$FALSE = new FalseState();

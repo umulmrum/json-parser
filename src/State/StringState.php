@@ -2,7 +2,6 @@
 
 namespace umulmrum\JsonParser\State;
 
-use umulmrum\JsonParser\DataSource\DataSourceException;
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
 
@@ -13,154 +12,19 @@ class StringState implements StateInterface
      */
     public function run(DataSourceInterface $dataSource)
     {
-        $isEscaped = false;
         $result = '';
         while (null !== $char = $dataSource->read()) {
             switch ($char) {
-                case '"':
-                    if (true === $isEscaped) {
-                        $result .= '"';
-                        $isEscaped = false;
-                    } else {
-                        return $result;
-                    }
-                    break;
                 case '\\':
-                    if (true === $isEscaped) {
-                        $result .= '\\';
-                        $isEscaped = false;
-                    } else {
-                        $isEscaped = true;
-                    }
+                    $result .= States::$ESCAPED_STRING->run($dataSource);
                     break;
-                case '/':
-                    $isEscaped = false;
-                    $result .= '/';
-                    break;
-                case 'b':
-                    if (true === $isEscaped) {
-                        $result .= "\b";
-                        $isEscaped = false;
-                    } else {
-                        $result .= 'b';
-                    }
-                    break;
-                case 'f':
-                    if (true === $isEscaped) {
-                        $result .= "\f";
-                        $isEscaped = false;
-                    } else {
-                        $result .= 'f';
-                    }
-                    break;
-                case 'n':
-                    if (true === $isEscaped) {
-                        $result .= "\n";
-                        $isEscaped = false;
-                    } else {
-                        $result .= 'n';
-                    }
-                    break;
-                case 'r':
-                    if (true === $isEscaped) {
-                        $result .= "\r";
-                        $isEscaped = false;
-                    } else {
-                        $result .= 'r';
-                    }
-                    break;
-                case 't':
-                    if (true === $isEscaped) {
-                        $result .= "\t";
-                        $isEscaped = false;
-                    } else {
-                        $result .= 't';
-                    }
-                    break;
-                case 'u':
-                    if (true === $isEscaped) {
-                        $result .= $this->getUnicodeChar($dataSource);
-                        $isEscaped = false;
-                    } else {
-                        $result .= 'u';
-                    }
-                    break;
+                case '"':
+                    return $result;
                 default:
-                    if (true === $isEscaped) {
-                        InvalidJsonException::trigger(
-                            sprintf('Unexpected character "%s, escaped character sequence expected', $char), $dataSource);
-                    }
                     $result .= $char;
             }
         }
 
         InvalidJsonException::trigger('Unexpected end of data, string termination expected', $dataSource);
-    }
-
-    /**
-     * Returns a unicode character.
-     * See also https://unicodebook.readthedocs.io/unicode_encodings.html#surrogates.
-     *
-     * @param DataSourceInterface $dataSource
-     *
-     * @return string
-     *
-     * @throws DataSourceException
-     * @throws InvalidJsonException
-     */
-    private function getUnicodeChar(DataSourceInterface $dataSource): string
-    {
-        $partOne = $this->getSingleUnicodePart($dataSource);
-        if ($partOne < 0xD800 || $partOne > 0xDBFF) {
-            return \chr($partOne);
-        }
-
-        if ('\\' !== $char = $dataSource->read()) {
-            InvalidJsonException::trigger(sprintf('Unexpected character "%s", second part of UTF-16 surrogate pair expected', $char), $dataSource);
-        }
-        if ('u' !== $char = $dataSource->read()) {
-            InvalidJsonException::trigger(sprintf('Unexpected character "%s", second part of UTF-16 surrogate pair expected', $char), $dataSource);
-        }
-
-        $partTwo = $this->getSingleUnicodePart($dataSource);
-        if ($partTwo < 0xDC00 || $partTwo > 0xDFFF) {
-            InvalidJsonException::trigger('Second part of UTF-16 surrogate pair expected, got something else', $dataSource);
-        }
-
-        $result = 0x10000;
-        $result += ($partOne & 0x03FF) << 10;
-        $result += ($partTwo & 0x03FF);
-
-        return \mb_chr($result, 'UTF-8');
-    }
-
-    /**
-     * @param DataSourceInterface $dataSource
-     *
-     * @return int
-     *
-     * @throws DataSourceException
-     * @throws InvalidJsonException
-     */
-    private function getSingleUnicodePart(DataSourceInterface $dataSource): int
-    {
-        $count = 0;
-        $result = '';
-        while ($count < 4) {
-            $char = $dataSource->read();
-            if (null === $char) {
-                InvalidJsonException::trigger('Unexpected end of data, number expected', $dataSource);
-            }
-            $charCode = \ord(\mb_strtoupper($char));
-            if (($charCode < 48 || $charCode > 57)
-                && ($charCode < 65 || $charCode > 90)) {
-                InvalidJsonException::trigger(
-                    sprintf('Unexpected character "%s", hexadecimal number expected', $char), $dataSource);
-            }
-            $result .= $char;
-            ++$count;
-        }
-
-        return \hexdec($result);
     }
 }

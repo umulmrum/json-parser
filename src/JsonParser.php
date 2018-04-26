@@ -25,6 +25,9 @@ class JsonParser
     }
 
     /**
+     * Returns the complete content of the JSON string provided by the underlying data source (equivalent to
+     * \json_decode()).
+     *
      * @return array|null
      *
      * @throws DataSourceException
@@ -36,11 +39,12 @@ class JsonParser
         $hasResult = false;
         foreach ($this->generate() as $value) {
             if (null !== $value) {
-                if (0 === \count($value)) {
+                $key = \key($value);
+                if (null === $key) {
                     return [];
                 }
                 $hasResult = true;
-                $result[\key($value)] = \current($value);
+                $result[$key] = \current($value);
             }
         }
         if (false === $hasResult) {
@@ -51,6 +55,9 @@ class JsonParser
     }
 
     /**
+     * Returns a \Generator that generates single elements from the underlying data source.
+     * The returned elements are the first-level elements of the root array/object.
+     *
      * @return \Generator
      *
      * @throws DataSourceException
@@ -63,13 +70,14 @@ class JsonParser
 
         try {
             while (States::$DOCUMENT_END !== $state) {
-                $value = $state->run($this->dataSource, 0);
+                $value = $state->run($this->dataSource);
                 $state = $this->getNextState($state);
                 if (null !== $value) {
-                    if (0 === \count($value)) {
+                    $key = \key($value);
+                    if (null === $key) {
                         yield [];
                     }
-                    if (0 === \key($value)) {
+                    if (0 === $key) {
                         $value = [
                             $index => $value[0],
                         ];
@@ -94,7 +102,7 @@ class JsonParser
      * @throws DataSourceException
      * @throws InvalidJsonException
      */
-    private function getNextState(StateInterface $previousState)
+    private function getNextState(StateInterface $previousState): StateInterface
     {
         $isNextElementRequested = false;
         while (null !== $char = $this->dataSource->read()) {
