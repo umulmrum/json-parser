@@ -7,10 +7,10 @@ trait WhitespaceTrait
     private function isWhitespace(string $char): bool
     {
         switch ($char) {
+            case ' ':
             case "\n":
             case "\r":
             case "\t":
-            case ' ':
                 return true;
             default:
                 return false;

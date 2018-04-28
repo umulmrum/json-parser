@@ -15,13 +15,14 @@ class StringState implements StateInterface
         $result = '';
         while (null !== $char = $dataSource->read()) {
             switch ($char) {
+                case '"':
+                    return $result;
                 case '\\':
                     $result .= States::$ESCAPED_STRING->run($dataSource);
                     break;
-                case '"':
-                    return $result;
                 default:
                     $result .= $char;
+                    break;
             }
         }
 

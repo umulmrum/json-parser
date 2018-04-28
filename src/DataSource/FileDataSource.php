@@ -25,10 +25,6 @@ class FileDataSource extends AbstractDataSource
      */
     private $lastChar;
     /**
-     * @var bool
-     */
-    private $isRewound;
-    /**
      * @var int
      */
     private $actualBufferSize = 0;
@@ -60,14 +56,6 @@ class FileDataSource extends AbstractDataSource
      */
     public function read(): ?string
     {
-        if (true === $this->isRewound) {
-            $char = $this->lastChar;
-            $this->lastChar = null;
-            $this->isRewound = false;
-            // TODO line and col do not match after rewind.
-
-            return $char;
-        }
         if ($this->position === $this->actualBufferSize) {
             /*
              * Using preg_split instead of mb_substr as suggested in
@@ -82,11 +70,12 @@ class FileDataSource extends AbstractDataSource
             if (false === $this->buffer) {
                 throw new DataSourceException('Error while reading from file.');
             }
+            \array_unshift($this->buffer, $this->lastChar);
             $this->actualBufferSize = \count($this->buffer);
-            $this->position = 0;
-            if (0 === $this->actualBufferSize) {
+            if (1 === $this->actualBufferSize) {
                 return null;
             }
+            $this->position = 1;
         }
         $char = $this->buffer[$this->position];
         ++$this->position;
@@ -106,7 +95,8 @@ class FileDataSource extends AbstractDataSource
      */
     public function rewind(): void
     {
-        $this->isRewound = true;
+        --$this->position;
+        // TODO line and col do not match after rewind.
     }
 
     /**
