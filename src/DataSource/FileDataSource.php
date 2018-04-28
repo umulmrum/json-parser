@@ -31,7 +31,7 @@ class FileDataSource extends AbstractDataSource
     /**
      * @var int
      */
-    private $actualBufferSize;
+    private $actualBufferSize = 0;
 
     /**
      * @param string $filePath
@@ -39,7 +39,7 @@ class FileDataSource extends AbstractDataSource
      *
      * @throws DataSourceException
      */
-    public function __construct(string $filePath, int $bufferSize = 100)
+    public function __construct(string $filePath, int $bufferSize = 32)
     {
         if (false === \file_exists($filePath)) {
             throw new DataSourceException('File does not exist: '.$filePath);
@@ -68,8 +68,7 @@ class FileDataSource extends AbstractDataSource
 
             return $char;
         }
-        if ($this->position === $this->actualBufferSize
-            || null === $this->buffer) {
+        if ($this->position === $this->actualBufferSize) {
             if (true === \feof($this->fileHandle)) {
                 return null;
             }
@@ -79,7 +78,7 @@ class FileDataSource extends AbstractDataSource
             }
             $this->actualBufferSize = \mb_strlen($this->buffer);
             $this->position = 0;
-            if ('' === $this->buffer && true === \feof($this->fileHandle)) {
+            if ('' === $this->buffer) {
                 return null;
             }
         }
