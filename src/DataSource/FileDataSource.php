@@ -39,7 +39,7 @@ class FileDataSource extends AbstractDataSource
      *
      * @throws DataSourceException
      */
-    public function __construct(string $filePath, int $bufferSize = 32)
+    public function __construct(string $filePath, int $bufferSize = 4096)
     {
         if (false === \file_exists($filePath)) {
             throw new DataSourceException('File does not exist: '.$filePath);
@@ -69,20 +69,26 @@ class FileDataSource extends AbstractDataSource
             return $char;
         }
         if ($this->position === $this->actualBufferSize) {
-            if (true === \feof($this->fileHandle)) {
-                return null;
-            }
-            $this->buffer = \fread($this->fileHandle, $this->bufferSize);
+            /*
+             * Using preg_split instead of mb_substr as suggested in
+             * https://stackoverflow.com/questions/3666306/how-to-iterate-utf-8-string-in-php
+             */
+            $this->buffer = \preg_split(
+                '//u',
+                \stream_get_contents($this->fileHandle, $this->bufferSize),
+                -1,
+                PREG_SPLIT_NO_EMPTY
+            );
             if (false === $this->buffer) {
                 throw new DataSourceException('Error while reading from file.');
             }
-            $this->actualBufferSize = \mb_strlen($this->buffer);
+            $this->actualBufferSize = \count($this->buffer);
             $this->position = 0;
-            if ('' === $this->buffer) {
+            if (0 === $this->actualBufferSize) {
                 return null;
             }
         }
-        $char = \mb_substr($this->buffer, $this->position, 1);
+        $char = $this->buffer[$this->position];
         ++$this->position;
         if ("\n" === $this->lastChar) {
             ++$this->line;
