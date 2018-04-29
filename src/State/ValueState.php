@@ -37,15 +37,12 @@ class ValueState implements StateInterface
                         $state = States::$ARRAY;
                         break;
                     case 't':
-                        $dataSource->rewind();
                         $state = States::$TRUE;
                         break;
                     case 'f':
-                        $dataSource->rewind();
                         $state = States::$FALSE;
                         break;
                     case 'n':
-                        $dataSource->rewind();
                         $state = States::$NULL;
                         break;
                     default:

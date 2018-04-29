@@ -12,7 +12,7 @@ abstract class AbstractKeywordState implements StateInterface
      */
     public function run(DataSourceInterface $dataSource)
     {
-        $position = 0;
+        $position = 1;
         $word = $this->getWord();
         $wordLength = \mb_strlen($word);
         while (null !== $char = $dataSource->read()) {
