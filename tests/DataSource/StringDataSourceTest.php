@@ -19,7 +19,7 @@ class StringDataSourceTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $this->dataSource = null;
@@ -75,6 +75,6 @@ class StringDataSourceTest extends TestCase
 
     private function thenTheResultingStringShouldEqual(string $data): void
     {
-        $this->assertEquals($data, $this->actualResult);
+        self::assertEquals($data, $this->actualResult);
     }
 }

@@ -3,6 +3,7 @@
 namespace umulmrum\JsonParser\Test\DataSource;
 
 use PHPUnit\Framework\TestCase;
+use umulmrum\JsonParser\DataSource\DataSourceException;
 use umulmrum\JsonParser\DataSource\FileDataSource;
 
 class FileDataSourceTest extends TestCase
@@ -19,7 +20,7 @@ class FileDataSourceTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $this->dataSource = null;
@@ -48,13 +49,13 @@ class FileDataSourceTest extends TestCase
             ['singleUmlaut.txt'],
             ['multipleChars.txt'],
             ['exceedBufferSize.txt'],
-            ['umlautsOnBufferEdges.txt'],
+            ['multipleUmlauts.txt'],
         ];
     }
 
     private function givenAFileDataSource(string $fileName): void
     {
-        $this->dataSource = new FileDataSource($this->getFilePath($fileName), 10);
+        $this->dataSource = new FileDataSource($this->getFilePath($fileName));
     }
 
     private function getFilePath(string $fileName): string
@@ -73,7 +74,7 @@ class FileDataSourceTest extends TestCase
 
     private function thenTheResultingStringShouldEqualContentsFrom(string $fileName): void
     {
-        $this->assertStringEqualsFile($this->getFilePath($fileName), $this->actualResult);
+        self::assertStringEqualsFile($this->getFilePath($fileName), $this->actualResult);
     }
 
     public function testRewind(): void
@@ -98,7 +99,7 @@ class FileDataSourceTest extends TestCase
 
     private function thenTheDataSourceShouldReturn(string $char): void
     {
-        $this->assertEquals($char, $this->actualResult);
+        self::assertEquals($char, $this->actualResult);
     }
 
     private function whenRewindIsCalled(): void
@@ -106,11 +107,14 @@ class FileDataSourceTest extends TestCase
         $this->dataSource->rewind();
     }
 
-    /**
-     * @expectedException \umulmrum\JsonParser\DataSource\DataSourceException
-     */
     public function testInvalidFile(): void
     {
+        $this->thenDataSourceExceptionIsExpected();
         $this->givenAFileDataSource('foo.txt');
+    }
+
+    private function thenDataSourceExceptionIsExpected(): void
+    {
+        $this->expectException(DataSourceException::class);
     }
 }

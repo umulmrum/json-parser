@@ -34,7 +34,7 @@ class JsonParserTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $this->dataSource = null;
@@ -101,7 +101,7 @@ class JsonParserTest extends TestCase
 
     private function thenTheResultShouldBeEqualToJsonDecode(): void
     {
-        $this->assertEquals(\json_decode($this->stringToDecode, true, 512, JSON_UNESCAPED_SLASHES), $this->actualResult);
+        self::assertEquals(\json_decode($this->stringToDecode, true, 512, JSON_UNESCAPED_SLASHES), $this->actualResult);
     }
 
     /**
@@ -164,8 +164,8 @@ class JsonParserTest extends TestCase
     private function thenTheFirstArrayElementShouldBeReturned(): void
     {
         $element = $this->actualResult->current();
-        $this->assertEquals(0, \key($element));
-        $this->assertEquals([
+        self::assertEquals(0, \key($element));
+        self::assertEquals([
             'foo',
             'bar',
         ], \current($element));
@@ -174,8 +174,8 @@ class JsonParserTest extends TestCase
     private function thenTheSecondArrayElementShouldBeReturned()
     {
         $element = $this->actualResult->current();
-        $this->assertEquals(1, \key($element));
-        $this->assertEquals([
+        self::assertEquals(1, \key($element));
+        self::assertEquals([
             'bar',
             'baz',
         ], \current($element));
@@ -184,8 +184,8 @@ class JsonParserTest extends TestCase
     private function thenTheThirdArrayElementShouldBeReturned()
     {
         $element = $this->actualResult->current();
-        $this->assertEquals(2, \key($element));
-        $this->assertEquals([
+        self::assertEquals(2, \key($element));
+        self::assertEquals([
             'such',
             'value',
         ], \current($element));
@@ -209,8 +209,8 @@ class JsonParserTest extends TestCase
     private function thenTheFirstObjectElementShouldBeReturned($expectedKey)
     {
         $element = $this->actualResult->current();
-        $this->assertEquals($expectedKey, \key($element));
-        $this->assertEquals([
+        self::assertEquals($expectedKey, \key($element));
+        self::assertEquals([
             'foo' => 'bar',
         ], \current($element));
     }
@@ -218,8 +218,8 @@ class JsonParserTest extends TestCase
     private function thenTheSecondObjectElementShouldBeReturned($expectedKey)
     {
         $element = $this->actualResult->current();
-        $this->assertEquals($expectedKey, \key($element));
-        $this->assertEquals([
+        self::assertEquals($expectedKey, \key($element));
+        self::assertEquals([
             'bar' => 'baz',
             ], \current($element));
     }
@@ -227,8 +227,8 @@ class JsonParserTest extends TestCase
     private function thenTheThirdObjectElementShouldBeReturned($expectedKey)
     {
         $element = $this->actualResult->current();
-        $this->assertEquals($expectedKey, \key($element));
-        $this->assertEquals([
+        self::assertEquals($expectedKey, \key($element));
+        self::assertEquals([
             'such' => 'value',
         ], \current($element));
     }
@@ -292,7 +292,7 @@ class JsonParserTest extends TestCase
      */
     public function testErrorInfo(string $fileToCheck, int $expectedErrorLine, int $expectedErrorColumn): void
     {
-        $this->markTestSkipped('Line and column info do not work correctly yet after rewinding.');
+        self::markTestSkipped('Line and column info do not work correctly yet after rewinding.');
         $this->givenADataSourceForInvalidFiles($fileToCheck);
         $this->givenAJsonParser();
 
@@ -321,7 +321,7 @@ class JsonParserTest extends TestCase
     {
         try {
             $this->jsonParser->all();
-            $this->fail('Expected InvalidJsonException.');
+            self::fail('Expected InvalidJsonException.');
         } catch (InvalidJsonException $e) {
             $this->thrownException = $e;
         }
@@ -329,7 +329,7 @@ class JsonParserTest extends TestCase
 
     private function thenTheExceptionShouldReportCorrectLineAndColumn($expectedErrorLine, $expectedErrorColumn): void
     {
-        $this->assertEquals($expectedErrorLine, $this->thrownException->getJsonLine());
-        $this->assertEquals($expectedErrorColumn, $this->thrownException->getJsonCol());
+        self::assertEquals($expectedErrorLine, $this->thrownException->getJsonLine());
+        self::assertEquals($expectedErrorColumn, $this->thrownException->getJsonCol());
     }
 }

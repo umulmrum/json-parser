@@ -5,14 +5,6 @@ namespace umulmrum\JsonParser\DataSource;
 class FileDataSource extends AbstractDataSource
 {
     /**
-     * @var int
-     */
-    private $bufferSize;
-    /**
-     * @var string
-     */
-    private $buffer;
-    /**
      * @var resource
      */
     private $fileHandle;
@@ -25,9 +17,9 @@ class FileDataSource extends AbstractDataSource
      */
     private $lastChar;
     /**
-     * @var int
+     * @var bool
      */
-    private $actualBufferSize = 0;
+    private $rewound;
 
     /**
      * @param string $filePath
@@ -44,7 +36,6 @@ class FileDataSource extends AbstractDataSource
             throw new DataSourceException('File is not readable: '.$filePath);
         }
 
-        $this->bufferSize = $bufferSize;
         $this->fileHandle = \fopen($filePath, 'rb');
         if (false === $this->fileHandle) {
             throw new DataSourceException('File could not be opened: '.$filePath);
@@ -56,28 +47,35 @@ class FileDataSource extends AbstractDataSource
      */
     public function read(): ?string
     {
-        if ($this->position === $this->actualBufferSize) {
-            /*
-             * Using preg_split instead of mb_substr as suggested in
-             * https://stackoverflow.com/questions/3666306/how-to-iterate-utf-8-string-in-php
-             */
-            $this->buffer = \preg_split(
-                '//u',
-                \stream_get_contents($this->fileHandle, $this->bufferSize),
-                -1,
-                PREG_SPLIT_NO_EMPTY
-            );
-            if (false === $this->buffer) {
-                throw new DataSourceException('Error while reading from file.');
+        if ($this->rewound) {
+            if ($this->lastChar === null) {
+                throw new DataSourceException('Cannot rewind more than once');
             }
-            \array_unshift($this->buffer, $this->lastChar);
-            $this->actualBufferSize = \count($this->buffer);
-            if (1 === $this->actualBufferSize) {
-                return null;
-            }
-            $this->position = 1;
+            $char = $this->lastChar;
+            $this->lastChar = null;
+            $this->rewound = false;
+
+            return $char;
         }
-        $char = $this->buffer[$this->position];
+
+        $char = $this->readFromStream();
+        if ($char === '') {
+            return null;
+        }
+        /*
+         * Handle UTF-8 multibyte characters (https://stackoverflow.com/questions/3666306/how-to-iterate-utf-8-string-in-php)
+         */
+        $ord = \ord($char);
+        if ($ord > 127) {
+            $char .= $this->readFromStream();
+            if ($ord > 223) {
+                $char .= $this->readFromStream();
+                if ($ord > 239) {
+                    $char .= $this->readFromStream();
+                }
+            }
+        }
+
         ++$this->position;
         if ("\n" === $this->lastChar) {
             ++$this->line;
@@ -91,11 +89,24 @@ class FileDataSource extends AbstractDataSource
     }
 
     /**
+     * @throws DataSourceException
+     */
+    private function readFromStream(): string
+    {
+        $char = \stream_get_contents($this->fileHandle, 1);
+        if ($char === false) {
+            throw new DataSourceException('Error while reading from stream');
+        }
+
+        return $char;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function rewind(): void
     {
-        --$this->position;
+        $this->rewound = true;
         // TODO line and col do not match after rewind.
     }
 
