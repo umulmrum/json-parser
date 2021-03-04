@@ -1,9 +1,9 @@
 <?php
 
-namespace umulmrum\JsonParser\Test\DataSource;
+namespace Umulmrum\JsonParser\Test\DataSource;
 
 use PHPUnit\Framework\TestCase;
-use umulmrum\JsonParser\DataSource\StringDataSource;
+use Umulmrum\JsonParser\DataSource\StringDataSource;
 
 class StringDataSourceTest extends TestCase
 {

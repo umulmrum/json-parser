@@ -1,6 +1,6 @@
 <?php
 
-namespace umulmrum\JsonParser;
+namespace Umulmrum\JsonParser;
 
 /**
  * Thrown on errors in the JSON string to parse.

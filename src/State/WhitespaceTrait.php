@@ -1,6 +1,6 @@
 <?php
 
-namespace umulmrum\JsonParser\State;
+namespace Umulmrum\JsonParser\State;
 
 /**
  * @internal

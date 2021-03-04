@@ -67,10 +67,10 @@ If the JSON string consists of an empty object or array, an empty array is retur
 If the JSON string is empty or consists only of whitespace, null is returned.
 
 On errors, one of these exceptions is thrown:
- - `\umulmrum\JsonParser\InvalidJsonException` if invalid JSON is encountered. The exception provides information
+ - `\Umulmrum\JsonParser\InvalidJsonException` if invalid JSON is encountered. The exception provides information
    on the line and column of the JSON string in which the error occurred (sometimes this information is off by
    one line or column).
--  `\umulmrum\JsonParser\DataSource\DataSourceException` if the source file could not be read for any reason.
+-  `\Umulmrum\JsonParser\DataSource\DataSourceException` if the source file could not be read for any reason.
 
 If no exception was thrown, the result can be "trusted" (i.e. there is no need to check for errors afterwards
 such as `\json_last_error()`).
@@ -93,17 +93,17 @@ because of memory).
 Customization
 -------------
 
-Internally, JsonParser uses an implementation of `\umulmrum\JsonParser\DataSource\DataSourceInterface` to receive
+Internally, JsonParser uses an implementation of `\Umulmrum\JsonParser\DataSource\DataSourceInterface` to receive
 the characters to parse. The factory methods for JsonParser are simple convenience methods that handle instantiating 
 the data source, but the constructor can be called manually, passing a data source, so that custom data
-source implementations can be used. See the docblocks of `\umulmrum\JsonParser\DataSource\DataSourceInterface` for
-details. You might wish to extend `\umulmrum\JsonParser\DataSource\AbstractDataSource` that contains some convenience
+source implementations can be used. See the docblocks of `\Umulmrum\JsonParser\DataSource\DataSourceInterface` for
+details. You might wish to extend `\Umulmrum\JsonParser\DataSource\AbstractDataSource` that contains some convenience
 methods.
 
 The example from the previous section can be written as follows:
 
 ```php
-$parser = new umulmrum\JsonParser\JsonParser(new \umulmrum\JsonParser\DataSource\FileDataSource('["test"]'));
+$parser = new Umulmrum\JsonParser\JsonParser(new \Umulmrum\JsonParser\DataSource\FileDataSource('["test"]'));
 ```
 
 Backwards Compatibility

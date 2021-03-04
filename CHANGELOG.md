@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- [BC Break] Changed vendor namespace from `umulmrum` to `Umulmrum`.
+
+### Removed
+- [BC Break] Removed second argument of `FileDataSource::__construct()` as it was no longer used since 0.4.0.
+
 ## [0.4.0] - 2021-03-04
 
 ### Added

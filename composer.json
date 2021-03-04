@@ -17,12 +17,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "umulmrum\\JsonParser\\": "src/"
+            "Umulmrum\\JsonParser\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "umulmrum\\JsonParser\\Test\\": "tests/"
+            "Umulmrum\\JsonParser\\Test\\": "tests/"
         }
     },
     "config": {

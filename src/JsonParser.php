@@ -1,14 +1,14 @@
 <?php
 
-namespace umulmrum\JsonParser;
+namespace Umulmrum\JsonParser;
 
-use umulmrum\JsonParser\DataSource\DataSourceException;
-use umulmrum\JsonParser\DataSource\DataSourceInterface;
-use umulmrum\JsonParser\DataSource\FileDataSource;
-use umulmrum\JsonParser\DataSource\StringDataSource;
-use umulmrum\JsonParser\State\StateInterface;
-use umulmrum\JsonParser\State\States;
-use umulmrum\JsonParser\State\WhitespaceTrait;
+use Umulmrum\JsonParser\DataSource\DataSourceException;
+use Umulmrum\JsonParser\DataSource\DataSourceInterface;
+use Umulmrum\JsonParser\DataSource\FileDataSource;
+use Umulmrum\JsonParser\DataSource\StringDataSource;
+use Umulmrum\JsonParser\State\StateInterface;
+use Umulmrum\JsonParser\State\States;
+use Umulmrum\JsonParser\State\WhitespaceTrait;
 
 class JsonParser
 {

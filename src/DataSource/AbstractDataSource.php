@@ -1,6 +1,6 @@
 <?php
 
-namespace umulmrum\JsonParser\DataSource;
+namespace Umulmrum\JsonParser\DataSource;
 
 abstract class AbstractDataSource implements DataSourceInterface
 {

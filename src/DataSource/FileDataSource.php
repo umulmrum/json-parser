@@ -1,6 +1,6 @@
 <?php
 
-namespace umulmrum\JsonParser\DataSource;
+namespace Umulmrum\JsonParser\DataSource;
 
 class FileDataSource extends AbstractDataSource
 {
@@ -24,7 +24,7 @@ class FileDataSource extends AbstractDataSource
     /**
      * @throws DataSourceException
      */
-    public function __construct(string $filePath, int $bufferSize = 2048)
+    public function __construct(string $filePath)
     {
         if (false === \file_exists($filePath)) {
             throw new DataSourceException('File does not exist: '.$filePath);

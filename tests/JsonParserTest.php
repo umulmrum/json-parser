@@ -1,12 +1,12 @@
 <?php
 
-namespace umulmrum\JsonParser\Test;
+namespace Umulmrum\JsonParser\Test;
 
 use PHPUnit\Framework\TestCase;
-use umulmrum\JsonParser\DataSource\DataSourceInterface;
-use umulmrum\JsonParser\DataSource\StringDataSource;
-use umulmrum\JsonParser\InvalidJsonException;
-use umulmrum\JsonParser\JsonParser;
+use Umulmrum\JsonParser\DataSource\DataSourceInterface;
+use Umulmrum\JsonParser\DataSource\StringDataSource;
+use Umulmrum\JsonParser\InvalidJsonException;
+use Umulmrum\JsonParser\JsonParser;
 
 class JsonParserTest extends TestCase
 {

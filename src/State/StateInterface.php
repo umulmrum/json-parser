@@ -1,10 +1,10 @@
 <?php
 
-namespace umulmrum\JsonParser\State;
+namespace Umulmrum\JsonParser\State;
 
-use umulmrum\JsonParser\DataSource\DataSourceException;
-use umulmrum\JsonParser\DataSource\DataSourceInterface;
-use umulmrum\JsonParser\InvalidJsonException;
+use Umulmrum\JsonParser\DataSource\DataSourceException;
+use Umulmrum\JsonParser\DataSource\DataSourceInterface;
+use Umulmrum\JsonParser\InvalidJsonException;
 
 /**
  * @internal

@@ -1,10 +1,10 @@
 <?php
 
-namespace umulmrum\JsonParser\Test\DataSource;
+namespace Umulmrum\JsonParser\Test\DataSource;
 
 use PHPUnit\Framework\TestCase;
-use umulmrum\JsonParser\DataSource\DataSourceException;
-use umulmrum\JsonParser\DataSource\FileDataSource;
+use Umulmrum\JsonParser\DataSource\DataSourceException;
+use Umulmrum\JsonParser\DataSource\FileDataSource;
 
 class FileDataSourceTest extends TestCase
 {
