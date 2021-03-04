@@ -6,7 +6,7 @@
     xmlns:xi="http://www.w3.org/2001/XInclude"
     errorLevel="2"
     allowStringToStandInForClass="true"
-    findUnusedPsalmSuppress="true"
+    findUnusedPsalmSuppress="false"
 >
     <projectFiles>
         <directory name="src" />
