@@ -48,7 +48,6 @@ class FileDataSourceTest extends TestCase
             ['singleChar.txt'],
             ['singleUmlaut.txt'],
             ['multipleChars.txt'],
-            ['exceedBufferSize.txt'],
             ['multipleUmlauts.txt'],
         ];
     }
