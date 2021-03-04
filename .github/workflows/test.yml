@@ -42,3 +42,6 @@ jobs:
             - name: "Run unit tests"
               run: "vendor/bin/phpunit --verbose"
 #              run: "vendor/bin/phpunit --verbose --coverage-text" # Coverage not supported on PHP 7.1; it's not that important for now
+
+            - name: "Run psalm"
+              run: "vendor/bin/psalm.phar"
