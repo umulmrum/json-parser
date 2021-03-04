@@ -110,12 +110,9 @@ Backwards Compatibility
 -----------------------
 
 This library follows Semantic Versioning and will therefore only introduce breaking changes in the public
-API in major versions (and in minor versions before reaching 1.0.0). The public API consists of:
-- `\umulmrum\JsonParser\JsonParser` (public methods). 
-- `\umulmrum\JsonParser\DataSource\DataSourceInterface` (public methods).
-- `\umulmrum\JsonParser\DataSource\AbstractDataSource` (public and protected methods).
-
-All other classes and methods are considered internal and can change anytime.
+API in major versions (and in minor versions before reaching 1.0.0). The public API consists of all classes, except
+- everything marked as @internal
+- tests
 
 Contribution
 ------------

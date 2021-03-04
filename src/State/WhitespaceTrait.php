@@ -2,6 +2,9 @@
 
 namespace umulmrum\JsonParser\State;
 
+/**
+ * @internal
+ */
 trait WhitespaceTrait
 {
     private function isWhitespace(string $char): bool

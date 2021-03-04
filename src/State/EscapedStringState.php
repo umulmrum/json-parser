@@ -6,6 +6,9 @@ use umulmrum\JsonParser\DataSource\DataSourceException;
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
 
+/**
+ * @internal
+ */
 class EscapedStringState implements StateInterface
 {
     /**

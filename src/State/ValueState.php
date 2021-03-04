@@ -5,6 +5,9 @@ namespace umulmrum\JsonParser\State;
 use umulmrum\JsonParser\DataSource\DataSourceInterface;
 use umulmrum\JsonParser\InvalidJsonException;
 
+/**
+ * @internal
+ */
 class ValueState implements StateInterface
 {
     use WhitespaceTrait;
