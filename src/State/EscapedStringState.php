@@ -73,7 +73,14 @@ class EscapedStringState implements StateInterface
         $result += ($partOne & 0x03FF) << 10;
         $result += ($partTwo & 0x03FF);
 
-        return \mb_chr($result, 'UTF-8');
+        /** @psalm-suppress UndefinedFunction */
+        $resultChar = \mb_chr($result, 'UTF-8');
+
+        if (false === $resultChar) {
+            throw new InvalidJsonException('Character could not be converted to unicode character', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
+        }
+
+        return $resultChar;
     }
 
     /**
