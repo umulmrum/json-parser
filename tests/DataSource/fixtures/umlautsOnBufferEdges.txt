@@ -1,2 +1,0 @@
-This äöÜßÄÖÜ test sets umlauts at the buffer edge.
-Another line.
