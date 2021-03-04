@@ -34,9 +34,7 @@ class NumericState implements StateInterface
 
                             return $this->getNumber($number, $isFloat);
                         default:
-                            InvalidJsonException::trigger(
-                                sprintf('Unexpected character %s, expected end of number', $char),
-                                $dataSource);
+                            throw new InvalidJsonException(\sprintf('Unexpected character %s, expected end of number', $char), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
                 }
             }
@@ -45,11 +43,9 @@ class NumericState implements StateInterface
                 case '.':
                     $lastCharWasE = false;
                     if ('' === $number) {
-                        InvalidJsonException::trigger('Unexpected character ".", expected digit or "-"',
-                            $dataSource);
+                        throw new InvalidJsonException('Unexpected character ".", expected digit or "-"', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     } elseif (true === $isFloat) {
-                        InvalidJsonException::trigger('Unexpected character ".", expected digit or end of number',
-                            $dataSource);
+                        throw new InvalidJsonException('Unexpected character ".", expected digit or end of number', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     } else {
                         $isFloat = true;
                         $number .= $char;
@@ -73,7 +69,7 @@ class NumericState implements StateInterface
                 case '8':
                 case '9':
                     if (true === $lastCharWasLeadingZero) {
-                        InvalidJsonException::trigger(sprintf('Unexpected character %s, expected dot, E, or end of number', $char), $dataSource);
+                        throw new InvalidJsonException(\sprintf('Unexpected character %s, expected dot, E, or end of number', $char), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
                     $lastCharWasE = false;
                     $number .= $char;
@@ -88,9 +84,7 @@ class NumericState implements StateInterface
                 case 'E':
                     $lastCharWasLeadingZero = false;
                     if (true === $hasE) {
-                        InvalidJsonException::trigger(
-                            sprintf('Unexpected character "%s", expected digit or end of number', $char),
-                            $dataSource);
+                        throw new InvalidJsonException(\sprintf('Unexpected character "%s", expected digit or end of number', $char), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
                     $number .= $char;
                     $isFloat = true;
@@ -101,30 +95,32 @@ class NumericState implements StateInterface
                     if ('' === $number || true === $lastCharWasE) {
                         $number .= $char;
                     } else {
-                        InvalidJsonException::trigger('Unexpected character "-", expected digit, dot or end of number',
-                            $dataSource);
+                        throw new InvalidJsonException('Unexpected character "-", expected digit, dot or end of number', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
                     $lastCharWasE = false;
                     break;
                 case '+':
                     if (false === $lastCharWasE) {
-                        InvalidJsonException::trigger(
-                            sprintf('Unexpected character "%s", expected digit or end of number', $char),
-                            $dataSource);
+                        throw new InvalidJsonException(\sprintf('Unexpected character "%s", expected digit or end of number', $char), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
                     $lastCharWasE = false;
                     $number .= $char;
                     break;
+                case null:
+                    throw new InvalidJsonException('Unexpected character null, expected digit or "-"', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                 default:
-                    InvalidJsonException::trigger(
-                        sprintf('Unexpected character %s, expected digit or "-"', $char),
-                        $dataSource);
+                    throw new InvalidJsonException(\sprintf('Unexpected character %s, expected digit or "-"', $char), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
             }
         }
 
-        InvalidJsonException::trigger('Unexpected end of data, number termination expected', $dataSource);
+        throw new InvalidJsonException('Unexpected end of data, number termination expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return float|int
+     */
     private function getNumber($value, bool $isFloat)
     {
         if (true === $isFloat) {

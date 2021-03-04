@@ -26,32 +26,28 @@ class RootObjectState implements StateInterface
                         return [];
                     }
 
-                    InvalidJsonException::trigger('No value found for key', $dataSource);
-                    // no break
+                    throw new InvalidJsonException('No value found for key', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                 case '"':
                     if (null !== $currentKey) {
-                        InvalidJsonException::trigger('Invalid character \'"\', ":" expected', $dataSource);
+                        throw new InvalidJsonException('Invalid character \'"\', ":" expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
                     $currentKey = States::$STRING->run($dataSource);
                     break;
                 case ':':
                     if (null === $currentKey) {
-                        InvalidJsonException::trigger('Invalid character ":", \'"\' expected', $dataSource);
+                        throw new InvalidJsonException('Invalid character ":", \'"\' expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
 
                     return [
                         $currentKey => States::$VALUE->run($dataSource),
                     ];
                 case ',':
-                    InvalidJsonException::trigger('Invalid character ","', $dataSource);
-                    // no break
+                    throw new InvalidJsonException('Invalid character ","', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                 default:
-                    InvalidJsonException::trigger(
-                        sprintf('Invalid character "%s", expected one of ["{", "["]', $char),
-                        $dataSource);
+                    throw new InvalidJsonException(\sprintf('Invalid character "%s", expected one of ["{", "["]', $char), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
             }
         }
 
-        InvalidJsonException::trigger('Unexpected end of data, end of object expected', $dataSource);
+        throw new InvalidJsonException('Unexpected end of data, end of object expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
     }
 }

@@ -18,9 +18,6 @@ class ValueState implements StateInterface
             if ($this->isWhitespace($char)) {
                 continue;
             }
-            /**
-             * @var $state StateInterface
-             */
             $state = null;
             if (true === is_numeric($char) || '-' === $char) {
                 $dataSource->rewind();
@@ -46,13 +43,13 @@ class ValueState implements StateInterface
                         $state = States::$NULL;
                         break;
                     default:
-                        InvalidJsonException::trigger(sprintf('Value expected, found "%s"', $char), $dataSource);
+                        throw new InvalidJsonException(\sprintf('Value expected, found "%s"', $char), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                 }
             }
 
             return $state->run($dataSource);
         }
 
-        InvalidJsonException::trigger('Unexpected end of data, value expected', $dataSource);
+        throw new InvalidJsonException('Unexpected end of data, value expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
     }
 }

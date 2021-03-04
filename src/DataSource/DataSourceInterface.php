@@ -9,8 +9,6 @@ interface DataSourceInterface
      * If reading from this data source after finish() was called, the
      * behavior is undefined.
      *
-     * @return null|string
-     *
      * @throws DataSourceException
      */
     public function read(): ?string;
@@ -18,15 +16,11 @@ interface DataSourceInterface
     /**
      * Returns the line the data source operates on (1-based). New lines are recognized
      * after each "\n" character.
-     *
-     * @return int
      */
     public function getCurrentLine(): int;
 
     /**
      * Returns the column the data source operates on (1-based).
-     *
-     * @return int
      */
     public function getCurrentCol(): int;
 

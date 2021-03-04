@@ -61,7 +61,7 @@ class States
      */
     public static $NULL;
 
-    public static function init()
+    public static function init(): void
     {
         self::$DOCUMENT_START = new DocumentStartState();
         self::$DOCUMENT_END = new DocumentEndState();

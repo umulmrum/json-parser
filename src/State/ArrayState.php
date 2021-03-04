@@ -25,20 +25,20 @@ class ArrayState implements StateInterface
             switch ($char) {
                 case ',':
                     if (true === $isValueExpected) {
-                        InvalidJsonException::trigger('Unexpected character ",", expected value', $dataSource);
+                        throw new InvalidJsonException('Unexpected character ",", expected value', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
                     $isValueExpected = true;
                     $isEndExpected = false;
                     break;
                 case ']':
                     if (false === $isEndExpected) {
-                        InvalidJsonException::trigger('Unexpected character "]", expected value', $dataSource);
+                        throw new InvalidJsonException('Unexpected character "]", expected value', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
 
                     return $values;
                 default:
                     if (false === $isValueExpected) {
-                        InvalidJsonException::trigger(sprintf('Unexpexted character "%s", expected "," or "]"', $char), $dataSource);
+                        throw new InvalidJsonException(\sprintf('Unexpected character "%s", expected "," or "]"', $char), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
                     $dataSource->rewind();
                     $values[$key] = States::$VALUE->run($dataSource);
@@ -49,6 +49,6 @@ class ArrayState implements StateInterface
             }
         }
 
-        InvalidJsonException::trigger('Unexpected end of data, end of array expected', $dataSource);
+        throw new InvalidJsonException('Unexpected end of data, end of array expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
     }
 }

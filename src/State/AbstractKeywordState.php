@@ -17,8 +17,7 @@ abstract class AbstractKeywordState implements StateInterface
         $wordLength = \mb_strlen($word);
         while (null !== $char = $dataSource->read()) {
             if ($word[$position] !== $char) {
-                InvalidJsonException::trigger(
-                    sprintf('"%s" expected, got something else', $this->getWord()), $dataSource);
+                throw new InvalidJsonException(\sprintf('"%s" expected, got something else', $this->getWord()), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
             }
             if ($position === $wordLength - 1) {
                 return $this->getValue();
@@ -26,14 +25,11 @@ abstract class AbstractKeywordState implements StateInterface
             ++$position;
         }
 
-        InvalidJsonException::trigger(
-            sprintf('Unexpected end of data, "%s" value expected', $this->getWord()), $dataSource);
+        throw new InvalidJsonException(\sprintf('Unexpected end of data, "%s" value expected', $this->getWord()), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
     }
 
     /**
      * Returns the keyword to match.
-     *
-     * @return string
      */
     abstract protected function getWord(): string;
 

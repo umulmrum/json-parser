@@ -5,7 +5,7 @@ namespace umulmrum\JsonParser\DataSource;
 class StringDataSource extends AbstractDataSource
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $data;
     /**
@@ -33,6 +33,9 @@ class StringDataSource extends AbstractDataSource
      */
     public function read(): ?string
     {
+        if (null === $this->data) {
+            throw new DataSourceException('Data source is already finished, cannot read.');
+        }
         if ($this->position >= $this->length) {
             return null;
         }

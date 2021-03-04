@@ -26,6 +26,6 @@ class StringState implements StateInterface
             }
         }
 
-        InvalidJsonException::trigger('Unexpected end of data, string termination expected', $dataSource);
+        throw new InvalidJsonException('Unexpected end of data, string termination expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
     }
 }

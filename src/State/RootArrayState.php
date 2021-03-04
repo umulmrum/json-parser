@@ -26,6 +26,6 @@ class RootArrayState implements StateInterface
             return [States::$VALUE->run($dataSource)];
         }
 
-        InvalidJsonException::trigger('Unexpected end of data, end of array expected', $dataSource);
+        throw new InvalidJsonException('Unexpected end of data, end of array expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
     }
 }

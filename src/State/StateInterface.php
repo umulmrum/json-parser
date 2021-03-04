@@ -11,8 +11,6 @@ interface StateInterface
     /**
      * Returns the value that is the result of handling the state.
      *
-     * @param DataSourceInterface $dataSource
-     *
      * @return mixed
      *
      * @throws DataSourceException

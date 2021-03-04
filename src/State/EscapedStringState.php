@@ -15,7 +15,7 @@ class EscapedStringState implements StateInterface
     {
         $char = $dataSource->read();
         if (null === $char) {
-            InvalidJsonException::trigger('Unexpected end of data, character expected', $dataSource);
+            throw new InvalidJsonException('Unexpected end of data, character expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
         }
 
         switch ($char) {
@@ -36,18 +36,13 @@ class EscapedStringState implements StateInterface
             case 'u':
                 return $this->getUnicodeChar($dataSource);
             default:
-                InvalidJsonException::trigger(
-                    sprintf('Unexpected character "%s, escaped character sequence expected', $char), $dataSource);
+                throw new InvalidJsonException(\sprintf('Unexpected character "%s, escaped character sequence expected', $char), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
         }
     }
 
     /**
      * Returns a unicode character.
      * See also https://unicodebook.readthedocs.io/unicode_encodings.html#surrogates.
-     *
-     * @param DataSourceInterface $dataSource
-     *
-     * @return string
      *
      * @throws DataSourceException
      * @throws InvalidJsonException
@@ -60,15 +55,15 @@ class EscapedStringState implements StateInterface
         }
 
         if ('\\' !== $char = $dataSource->read()) {
-            InvalidJsonException::trigger(sprintf('Unexpected character "%s", second part of UTF-16 surrogate pair expected', $char), $dataSource);
+            throw new InvalidJsonException(\sprintf('Unexpected character "%s", second part of UTF-16 surrogate pair expected', $char ?: 'null'), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
         }
         if ('u' !== $char = $dataSource->read()) {
-            InvalidJsonException::trigger(sprintf('Unexpected character "%s", second part of UTF-16 surrogate pair expected', $char), $dataSource);
+            throw new InvalidJsonException(\sprintf('Unexpected character "%s", second part of UTF-16 surrogate pair expected', $char ?: 'null'), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
         }
 
         $partTwo = $this->getSingleUnicodePart($dataSource);
         if ($partTwo < 0xDC00 || $partTwo > 0xDFFF) {
-            InvalidJsonException::trigger('Second part of UTF-16 surrogate pair expected, got something else', $dataSource);
+            throw new InvalidJsonException('Second part of UTF-16 surrogate pair expected, got something else', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
         }
 
         $result = 0x10000;
@@ -79,10 +74,6 @@ class EscapedStringState implements StateInterface
     }
 
     /**
-     * @param DataSourceInterface $dataSource
-     *
-     * @return int
-     *
      * @throws DataSourceException
      * @throws InvalidJsonException
      */
@@ -93,13 +84,12 @@ class EscapedStringState implements StateInterface
         while ($count < 4) {
             $char = $dataSource->read();
             if (null === $char) {
-                InvalidJsonException::trigger('Unexpected end of data, number expected', $dataSource);
+                throw new InvalidJsonException('Unexpected end of data, number expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
             }
             $charCode = \ord(\mb_strtoupper($char));
             if (($charCode < 48 || $charCode > 57)
                 && ($charCode < 65 || $charCode > 90)) {
-                InvalidJsonException::trigger(
-                    sprintf('Unexpected character "%s", hexadecimal number expected', $char), $dataSource);
+                throw new InvalidJsonException(\sprintf('Unexpected character "%s", hexadecimal number expected', $char), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
             }
             $result .= $char;
             ++$count;

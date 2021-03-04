@@ -28,8 +28,6 @@ class JsonParser
      * Returns the complete content of the JSON string provided by the underlying data source (equivalent to
      * \json_decode()).
      *
-     * @return array|null
-     *
      * @throws DataSourceException
      * @throws InvalidJsonException
      */
@@ -57,8 +55,6 @@ class JsonParser
     /**
      * Returns a \Generator that generates single elements from the underlying data source.
      * The returned elements are the first-level elements of the root array/object.
-     *
-     * @return \Generator
      *
      * @throws DataSourceException
      * @throws InvalidJsonException
@@ -95,10 +91,6 @@ class JsonParser
     }
 
     /**
-     * @param StateInterface $previousState
-     *
-     * @return StateInterface
-     *
      * @throws DataSourceException
      * @throws InvalidJsonException
      */
@@ -111,8 +103,7 @@ class JsonParser
             switch ($char) {
                 case ',':
                     if (States::$DOCUMENT_START === $previousState) {
-                        InvalidJsonException::trigger('Unexpected character ",", expected one of "[", "{"',
-                            $this->dataSource);
+                        throw new InvalidJsonException('Unexpected character ",", expected one of "[", "{"', $this->dataSource->getCurrentLine(), $this->dataSource->getCurrentCol());
                     }
 
                     return $previousState;
@@ -129,28 +120,19 @@ class JsonParser
                     } else {
                         $message = sprintf('Unexpected character "%s", expected one of ",", "[", "{"', $char);
                     }
-                    InvalidJsonException::trigger($message, $this->dataSource);
+                    throw new InvalidJsonException($message, $this->dataSource->getCurrentLine(), $this->dataSource->getCurrentCol());
             }
         }
 
         return States::$DOCUMENT_END;
     }
 
-    /**
-     * @param string $data
-     *
-     * @return JsonParser
-     */
     public static function fromString(string $data): JsonParser
     {
         return new JsonParser(new StringDataSource($data));
     }
 
     /**
-     * @param string $filePath
-     *
-     * @return JsonParser
-     *
      * @throws DataSourceException
      */
     public static function fromFile(string $filePath): JsonParser

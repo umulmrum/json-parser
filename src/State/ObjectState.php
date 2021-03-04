@@ -26,16 +26,16 @@ class ObjectState implements StateInterface
             switch ($char) {
                 case '}':
                     if (null !== $currentKey && false === $valueFound) {
-                        InvalidJsonException::trigger('No value found for key', $dataSource);
+                        throw new InvalidJsonException('No value found for key', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
                     if (true === $nextElementRequested) {
-                        InvalidJsonException::trigger('Unexpected character "}", expected next element', $dataSource);
+                        throw new InvalidJsonException('Unexpected character "}", expected next element', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
 
                     return $values;
                 case '"':
                     if (null !== $currentKey) {
-                        InvalidJsonException::trigger('Invalid character \'"\', ":" expected', $dataSource);
+                        throw new InvalidJsonException('Invalid character \'"\', ":" expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
                     $currentKey = States::$STRING->run($dataSource);
                     $valueFound = false;
@@ -43,7 +43,7 @@ class ObjectState implements StateInterface
                     break;
                 case ':':
                     if (null === $currentKey) {
-                        InvalidJsonException::trigger('Invalid character ":", \'"\' expected', $dataSource);
+                        throw new InvalidJsonException('Invalid character ":", \'"\' expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
                     $values[$currentKey] = States::$VALUE->run($dataSource);
                     $currentKey = null;
@@ -52,17 +52,15 @@ class ObjectState implements StateInterface
                     break;
                 case ',':
                     if (null !== $currentKey) {
-                        InvalidJsonException::trigger('Invalid character ",", expected value', $dataSource);
+                        throw new InvalidJsonException('Invalid character ",", expected value', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
                     }
                     $nextElementRequested = true;
                     break;
                 default:
-                    InvalidJsonException::trigger(
-                        sprintf('Invalid character "%s", expected one of ["{", "["]', $char),
-                        $dataSource);
+                    throw new InvalidJsonException(\sprintf('Invalid character "%s", expected one of ["{", "["]', $char), $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
             }
         }
 
-        InvalidJsonException::trigger('Unexpected end of data, end of object expected', $dataSource);
+        throw new InvalidJsonException('Unexpected end of data, end of object expected', $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
     }
 }

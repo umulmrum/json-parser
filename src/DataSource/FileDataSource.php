@@ -13,18 +13,15 @@ class FileDataSource extends AbstractDataSource
      */
     private $position = 0;
     /**
-     * @var string
+     * @var string|null
      */
     private $lastChar;
     /**
      * @var bool
      */
-    private $rewound;
+    private $rewound = false;
 
     /**
-     * @param string $filePath
-     * @param int    $bufferSize
-     *
      * @throws DataSourceException
      */
     public function __construct(string $filePath, int $bufferSize = 2048)
@@ -47,8 +44,11 @@ class FileDataSource extends AbstractDataSource
      */
     public function read(): ?string
     {
+        if ('stream' !== \get_resource_type($this->fileHandle)) {
+            throw new DataSourceException('Data source is already finished, cannot read.');
+        }
         if ($this->rewound) {
-            if ($this->lastChar === null) {
+            if (null === $this->lastChar) {
                 throw new DataSourceException('Cannot rewind more than once');
             }
             $char = $this->lastChar;
@@ -58,8 +58,29 @@ class FileDataSource extends AbstractDataSource
             return $char;
         }
 
+        $char = $this->readCharacterFromStream();
+        if ('' === $char) {
+            return null;
+        }
+
+        if ("\n" === $this->lastChar) {
+            ++$this->line;
+            $this->col = 1;
+        } else {
+            ++$this->col;
+        }
+        $this->lastChar = $char;
+
+        return $char;
+    }
+
+    /**
+     * @throws DataSourceException
+     */
+    private function readCharacterFromStream(): ?string
+    {
         $char = $this->readFromStream();
-        if ($char === '') {
+        if ('' === $char) {
             return null;
         }
         /*
@@ -76,15 +97,6 @@ class FileDataSource extends AbstractDataSource
             }
         }
 
-        ++$this->position;
-        if ("\n" === $this->lastChar) {
-            ++$this->line;
-            $this->col = 1;
-        } else {
-            ++$this->col;
-        }
-        $this->lastChar = $char;
-
         return $char;
     }
 
@@ -94,9 +106,10 @@ class FileDataSource extends AbstractDataSource
     private function readFromStream(): string
     {
         $char = \stream_get_contents($this->fileHandle, 1);
-        if ($char === false) {
+        if (false === $char) {
             throw new DataSourceException('Error while reading from stream');
         }
+        ++$this->position;
 
         return $char;
     }
@@ -115,6 +128,9 @@ class FileDataSource extends AbstractDataSource
      */
     public function finish(): void
     {
+        /**
+         * @psalm-suppress InvalidPropertyAssignmentValue
+         */
         \fclose($this->fileHandle);
     }
 }

@@ -2,8 +2,6 @@
 
 namespace umulmrum\JsonParser;
 
-use umulmrum\JsonParser\DataSource\DataSourceInterface;
-
 /**
  * Thrown on errors in the JSON string to parse.
  */
@@ -26,32 +24,13 @@ class InvalidJsonException extends \Exception
         $this->jsonCol = $jsonCol;
     }
 
-    /**
-     * @return int
-     */
     public function getJsonLine(): int
     {
         return $this->jsonLine;
     }
 
-    /**
-     * @return int
-     */
     public function getJsonCol(): int
     {
         return $this->jsonCol;
-    }
-
-    /**
-     * Convenience method to throw an InvalidJsonException.
-     *
-     * @param string              $message
-     * @param DataSourceInterface $dataSource
-     *
-     * @throws InvalidJsonException
-     */
-    public static function trigger(string $message, DataSourceInterface $dataSource): void
-    {
-        throw new self($message, $dataSource->getCurrentLine(), $dataSource->getCurrentCol());
     }
 }
